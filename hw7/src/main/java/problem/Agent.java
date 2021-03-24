@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-public class Agent<T extends AbstractProperty, U extends AbstractContract> {
+public class Agent<K extends AbstractProperty, V extends AbstractContract> {
 
   private String name;
-  private Map<T, U> currentListings;
+  private Map<K, V> currentListings;
   private double commissionRate;
   private double totalEarnings;
 
@@ -37,7 +37,7 @@ public class Agent<T extends AbstractProperty, U extends AbstractContract> {
     return this.name;
   }
 
-  public Map<T, U> getCurrentListings() {
+  public Map<K, V> getCurrentListings() {
     return this.currentListings;
   }
 
@@ -53,7 +53,7 @@ public class Agent<T extends AbstractProperty, U extends AbstractContract> {
    * Adds an(appropriate) listing to the Agent’s current listing collection.
    * @param listing A listing consisting of a property and a contract.
    */
-  public void addListing(Listing<T, U> listing) {
+  public void addListing(Listing<K, V> listing) {
     this.currentListings.put(listing.getProperty(), listing.getContract());
   }
 
@@ -63,7 +63,7 @@ public class Agent<T extends AbstractProperty, U extends AbstractContract> {
    * Listing from their collection and add their commission earnings to their total earnings amount.
    * @param listing A listing consisting of a property and a contract.
    */
-  public void completeListing(Listing<T, U> listing) throws ListingNotFoundException {
+  public void completeListing(Listing<K, V> listing) throws ListingNotFoundException {
     this.dropListing(listing);
     double commission = this.commissionRate * listing.getCommission();
     this.totalEarnings += commission;
@@ -74,7 +74,7 @@ public class Agent<T extends AbstractProperty, U extends AbstractContract> {
    * @param listing A listing consisting of a property and a contract.
    * @throws ListingNotFoundException if the listing is not in the currentListings.
    */
-  public void dropListing(Listing<T, U> listing) throws ListingNotFoundException {
+  public void dropListing(Listing<K, V> listing) throws ListingNotFoundException {
     if (this.contains(listing)) {
       this.currentListings.remove(listing.getProperty(), listing.getContract());
     } else {
@@ -86,9 +86,8 @@ public class Agent<T extends AbstractProperty, U extends AbstractContract> {
    * Helper method that checks whether the currentListings contains a listing.
    * @param listing The listing to be checked.
    * @return True if the currentListings contains the listing, false otherwise.
-   * @throws ListingNotFoundException if the listing is not in the currentListings.
    */
-  private boolean contains(Listing<T, U> listing) {
+  private boolean contains(Listing<K, V> listing) {
     if (this.currentListings.containsKey(listing.getProperty()) &&
         this.currentListings.get(listing.getProperty()).equals(listing.getContract())) {
       return true;
@@ -104,7 +103,7 @@ public class Agent<T extends AbstractProperty, U extends AbstractContract> {
    */
   public double getTotalPortfolioValue() {
     double totalPortfolioValue = 0;
-    for (U value : this.currentListings.values()) {
+    for (V value : this.currentListings.values()) {
       totalPortfolioValue += this.commissionRate * value.getCommission();
     }
     return totalPortfolioValue;
