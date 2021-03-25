@@ -54,12 +54,6 @@ public class Rental extends AbstractContract {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof Rental)) {
-      return false;
-    }
     if (!super.equals(o)) {
       return false;
     }

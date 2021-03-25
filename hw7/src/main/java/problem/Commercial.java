@@ -47,12 +47,6 @@ public class Commercial extends AbstractProperty {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof Commercial)) {
-      return false;
-    }
     if (!super.equals(o)) {
       return false;
     }

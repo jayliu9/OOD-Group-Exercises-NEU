@@ -20,7 +20,7 @@ public class Agent<T extends Listing> {
   /**
    * Constructor for the problem.Agent.
    *
-   * @param name           The name of agent
+   * @param name           The name of agent.
    * @param commissionRate The commission rate of the agent, represented as a Double between 0 and 1
    *                       (inclusive).This is the percentage of the contract amount that the agent
    *                       takes as payment if they successfully sell / rent the property in one of

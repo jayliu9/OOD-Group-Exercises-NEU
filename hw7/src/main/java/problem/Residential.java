@@ -60,12 +60,6 @@ public class Residential extends AbstractProperty {
    */
   @Override
   public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (!(o instanceof Residential)) {
-      return false;
-    }
     if (!super.equals(o)) {
       return false;
     }
