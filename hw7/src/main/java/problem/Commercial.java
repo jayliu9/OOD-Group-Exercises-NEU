@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class Commercial extends AbstractProperty {
 
-  private int numOfOffices;
-  private boolean isSuitableForRetail;
+  private Integer numOfOffices;
+  private Boolean isSuitableForRetail;
 
   /**
    * Constructor for the problem.Commercial.
@@ -18,7 +18,7 @@ public class Commercial extends AbstractProperty {
    * @throws InvalidNumOfOfficesException if the number of offices is invalid.
    * @throws InvalidSizeException if the size is invalid.
    */
-  public Commercial(String address, int size, int numOfOffices, boolean isSuitableForRetail)
+  public Commercial(String address, Integer size, Integer numOfOffices, Boolean isSuitableForRetail)
       throws InvalidNumOfOfficesException, InvalidSizeException {
     super(address, size);
     this.numOfOffices = this.validateNumOfOffices(numOfOffices);
@@ -32,7 +32,7 @@ public class Commercial extends AbstractProperty {
    * @return The numOfOffices to be checked.
    * @throws InvalidNumOfOfficesException if the numOfOffices is invalid
    */
-  private int validateNumOfOffices(int numOfOffices) throws InvalidNumOfOfficesException {
+  private Integer validateNumOfOffices(Integer numOfOffices) throws InvalidNumOfOfficesException {
     if (numOfOffices >= 0) {
       return numOfOffices;
     }

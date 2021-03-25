@@ -8,7 +8,7 @@ import java.util.Objects;
  */
 public abstract class AbstractProperty {
   protected String address;
-  protected int size;
+  protected Integer size;
 
   /**
    * Constructor for the problem.AbstractProperty.
@@ -17,7 +17,7 @@ public abstract class AbstractProperty {
    * @param size    The property size of the problem.AbstractProperty.
    * @throws InvalidSizeException if the size is invalid
    */
-  public AbstractProperty(String address, int size) throws InvalidSizeException {
+  public AbstractProperty(String address, Integer size) throws InvalidSizeException {
     this.address = address;
     this.size = this.validateSize(size);
   }
@@ -28,7 +28,7 @@ public abstract class AbstractProperty {
    * @return The size to be checked.
    * @throws InvalidSizeException if the size is invalid.
    */
-  private int validateSize(int size) throws InvalidSizeException {
+  private Integer validateSize(Integer size) throws InvalidSizeException {
     if (size >= 0) {
       return size;
     }

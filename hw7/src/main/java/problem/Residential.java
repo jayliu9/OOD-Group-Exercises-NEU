@@ -5,8 +5,8 @@ import java.util.Objects;
 
 public class Residential extends AbstractProperty {
 
-  private int numOfBedrooms;
-  private double numOfBathrooms;
+  private Integer numOfBedrooms;
+  private Double numOfBathrooms;
 
   /**
    * Constructor for the problem.Residential property.
@@ -19,7 +19,7 @@ public class Residential extends AbstractProperty {
    * @throws InvalidNumOfBathroomsException if the numOfBathrooms is invalid.
    * @throws InvalidSizeException if the size is invalid.
    */
-  public Residential(String address, int size, int numOfBedrooms, double numOfBathrooms)
+  public Residential(String address, Integer size, Integer numOfBedrooms, Double numOfBathrooms)
       throws InvalidSizeException, InvalidNumOfBedroomsException, InvalidNumOfBathroomsException {
     super(address, size);
     this.numOfBedrooms = this.validateNumOfBedrooms(numOfBedrooms);
@@ -32,7 +32,7 @@ public class Residential extends AbstractProperty {
    * @return The numOfBedrooms to be checked.
    * @throws InvalidNumOfBedroomsException if the numOfBedrooms is invalid.
    */
-  private int validateNumOfBedrooms(int numOfBedrooms) throws InvalidNumOfBedroomsException {
+  private Integer validateNumOfBedrooms(Integer numOfBedrooms) throws InvalidNumOfBedroomsException {
     if (numOfBedrooms >= 0) {
       return numOfBedrooms;
     }
@@ -45,7 +45,7 @@ public class Residential extends AbstractProperty {
    * @return The numOfBathrooms to be checked.
    * @throws InvalidNumOfBathroomsException if the numOfBathrooms is invalid.
    */
-  private double validateNumOfBathrooms(double numOfBathrooms) throws InvalidNumOfBathroomsException {
+  private Double validateNumOfBathrooms(Double numOfBathrooms) throws InvalidNumOfBathroomsException {
     if (numOfBathrooms >= 0) {
       return numOfBathrooms;
     }

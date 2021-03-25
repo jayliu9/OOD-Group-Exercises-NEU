@@ -18,7 +18,7 @@ public class Sale extends AbstractContract {
    * @return the commission of this kind of contract
    */
   @Override
-  protected double getCommission() {
+  protected Double getCommission() {
     return this.askingPrice;
   }
 

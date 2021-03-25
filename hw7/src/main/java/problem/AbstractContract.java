@@ -8,8 +8,8 @@ import java.util.Objects;
  */
 public abstract class AbstractContract {
 
-  protected double askingPrice;
-  protected boolean isNegotiable;
+  protected Double askingPrice;
+  protected Boolean isNegotiable;
 
   /**
    * Constructor for the Abstract contract.
@@ -18,7 +18,7 @@ public abstract class AbstractContract {
    * @param isNegotiable Whether or not the price is negotiable.
    * @throws InvalidAskingPriceException if the askingPrice is invalid
    */
-  public AbstractContract(double askingPrice, boolean isNegotiable)
+  public AbstractContract(Double askingPrice, Boolean isNegotiable)
       throws InvalidAskingPriceException {
     this.askingPrice = this.validateAskingPrice(askingPrice);
     this.isNegotiable = isNegotiable;
@@ -31,7 +31,7 @@ public abstract class AbstractContract {
    * @return The askingPrice to be checked.
    * @throws InvalidAskingPriceException if the askingPrice is invalid
    */
-  private double validateAskingPrice(double askingPrice) throws InvalidAskingPriceException {
+  private Double validateAskingPrice(Double askingPrice) throws InvalidAskingPriceException {
     if (askingPrice >= 0) {
       return askingPrice;
     }
@@ -43,7 +43,7 @@ public abstract class AbstractContract {
    *
    * @return the commission of this kind of contract
    */
-  protected abstract double getCommission();
+  protected abstract Double getCommission();
 
   /**
    * Indicates whether some other object is "equal to" this one.

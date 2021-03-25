@@ -14,41 +14,41 @@ public class Agent<T extends Listing> {
 
   protected String name;
   protected Set<T> currentListings;
-  protected double commissionRate;
-  protected double totalEarnings;
+  protected Double commissionRate;
+  protected Double totalEarnings;
 
   /**
    * Constructor for the problem.Agent.
    *
    * @param name           The name of agent
-   * @param commissionRate The commission rate of the agent, represented as a double between 0 and 1
+   * @param commissionRate The commission rate of the agent, represented as a Double between 0 and 1
    *                       (inclusive).This is the percentage of the contract amount that the agent
    *                       takes as payment if they successfully sell / rent the property in one of
    *                       their listings.
    * @throws InvalidCommissionRateException if the commissionRate is invalid.
    */
-  public Agent(String name, double commissionRate)
+  public Agent(String name, Double commissionRate)
       throws InvalidCommissionRateException {
     this.name = name;
     this.currentListings = new HashSet<>();
     this.commissionRate = this.validateCommissionRate(commissionRate);
-    this.totalEarnings = 0;
+    this.totalEarnings = 0.0;
   }
 
   /**
    * Instantiates a new problem.Agent.
    *
    * @param name           The name of agent.
-   * @param commissionRate The commission rate of the agent, represented as a double between 0 and 1
+   * @param commissionRate The commission rate of the agent, represented as a Double between 0 and 1
    *                       (inclusive).This is the percentage of the contract amount that the agent
    *                       takes as payment if they successfully sell / rent the property in one of
    *                       their listings.
-   * @param totalEarnings  The total earnings, represented as a non-negative double. This is the
+   * @param totalEarnings  The total earnings, represented as a non-negative Double. This is the
    *                       total amount the problem.Agent has earned from their sales / rentals.
    * @throws InvalidCommissionRateException if the commissionRate is invalid.
    * @throws InvalidTotalEarningsException  if the totalEarnings is invalid.
    */
-  public Agent(String name, double commissionRate, double totalEarnings)
+  public Agent(String name, Double commissionRate, Double totalEarnings)
       throws InvalidCommissionRateException, InvalidTotalEarningsException {
     this.name = name;
     this.currentListings = new HashSet<>();
@@ -63,7 +63,7 @@ public class Agent<T extends Listing> {
    * @return The commissionRate to be checked.
    * @throws InvalidCommissionRateException if the commissionRate is invalid.
    */
-  private double validateCommissionRate(double commissionRate)
+  private Double validateCommissionRate(Double commissionRate)
       throws InvalidCommissionRateException {
     if (commissionRate > 0 && commissionRate <= 1) {
       return commissionRate;
@@ -78,7 +78,7 @@ public class Agent<T extends Listing> {
    * @return The totalEarnings to be checked.
    * @throws InvalidTotalEarningsException if the totalEarnings is invalid.
    */
-  private double validateTotalEarnings(double totalEarnings) throws InvalidTotalEarningsException {
+  private Double validateTotalEarnings(Double totalEarnings) throws InvalidTotalEarningsException {
     if (totalEarnings >= 0) {
       return totalEarnings;
     }
@@ -129,8 +129,8 @@ public class Agent<T extends Listing> {
    * @return the amount of money the problem.Agent would make if they successfully completed all listings in
    * their collection.
    */
-  public double getTotalPortfolioValue() {
-    double totalPortfolioValue = 0;
+  public Double getTotalPortfolioValue() {
+    Double totalPortfolioValue = 0.0;
     for (T item : this.currentListings) {
       totalPortfolioValue += this.commissionRate * item.getContract().getCommission();
     }

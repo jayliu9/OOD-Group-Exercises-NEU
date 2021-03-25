@@ -5,7 +5,7 @@ import java.util.Objects;
 
 public class Rental extends AbstractContract {
 
-  protected int term;
+  protected Integer term;
 
   /**
    * Constructor for the problem.Rental.
@@ -16,7 +16,7 @@ public class Rental extends AbstractContract {
    * @throws InvalidTermException        if the term is invalid.
    * @throws InvalidAskingPriceException if the askingPrice is invalid.
    */
-  public Rental(Double askingPrice, Boolean isNegotiable, int term)
+  public Rental(Double askingPrice, Boolean isNegotiable, Integer term)
       throws InvalidTermException, InvalidAskingPriceException {
     super(askingPrice, isNegotiable);
     this.term = this.validateTerm(term);
@@ -29,7 +29,7 @@ public class Rental extends AbstractContract {
    * @return The term to be checked.
    * @throws InvalidTermException if the term is invalid
    */
-  private int validateTerm(int term) throws InvalidTermException {
+  private Integer validateTerm(Integer term) throws InvalidTermException {
     if (term > 0) {
       return term;
     }
@@ -42,7 +42,7 @@ public class Rental extends AbstractContract {
    * @return the commission of this kind of contract
    */
   @Override
-  protected double getCommission() {
+  protected Double getCommission() {
     return this.askingPrice * this.term;
   }
 
