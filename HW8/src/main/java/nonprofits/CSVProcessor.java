@@ -1,6 +1,7 @@
-package email;
+package nonprofits;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -59,7 +60,7 @@ public class CSVProcessor {
   public void addInfo(String line) {
     String trimmed = this.trimHeadTail(line);
     String[] split = trimmed.split(SPLIT_REGEX);
-    List<String> row = List.of(split);
+    List<String> row = Arrays.asList(split);
     this.info.add(row);
   }
 

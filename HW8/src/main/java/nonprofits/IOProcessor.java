@@ -1,4 +1,4 @@
-package email;
+package nonprofits;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -16,10 +16,10 @@ import java.util.regex.Pattern;
 public class IOProcessor {
 
   private static final String TEMPLATE_MARK = "template";
-  private static final String OUTPUT_MARK = "--output-dir";
-  private static final String INFO_FILE_MARK = "--csv-file";
+  private static final String OUTPUT_MARK = "output-dir";
+  private static final String INFO_FILE_MARK = "csv-file";
 
-  private static final String CLASS_RE = "--(\\w+)-";
+  private static final String CLASS_RE = "(\\w+)-";
 
   private List<Option> templateOptions;
   private String outputPath;
@@ -38,8 +38,6 @@ public class IOProcessor {
    */
   private String readTemplate(String templatePath) {
     String msg = "";
-
-    System.out.println(System.getProperty("user.dir"));
 
     try (BufferedReader inputFile = new BufferedReader(new FileReader(templatePath))) {
       String line;
@@ -64,8 +62,6 @@ public class IOProcessor {
   private CSVProcessor readCSV(String csvPath) {
     Map<String, List<String>> temp = new HashMap<>();
     CSVProcessor processor = new CSVProcessor();
-
-    System.out.println(System.getProperty("user.dir"));
 
     try (BufferedReader inputFile = new BufferedReader(new FileReader(csvPath))) {
       String line;
@@ -93,8 +89,6 @@ public class IOProcessor {
    */
   private void write(String msg, File file) {
 
-    System.out.println(System.getProperty("user.dir"));
-
     try (BufferedWriter outputFile = new BufferedWriter(new FileWriter(file))) {
       outputFile.write(msg);
     } catch (FileNotFoundException fnfe) {
@@ -116,7 +110,7 @@ public class IOProcessor {
     this.createFolder(this.outputPath);
 
     for (Option templateOpt : this.templateOptions) {
-      String content = this.readTemplate(templateOpt.getValue());
+      String content = this.readTemplate(templateOpt.getArgName());
       Template template = new Template(content);
 
       for (List<String> eachRow : rows) {
