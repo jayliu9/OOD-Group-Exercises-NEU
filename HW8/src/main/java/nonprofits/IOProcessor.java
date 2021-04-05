@@ -60,7 +60,6 @@ public class IOProcessor {
    * @return A CSVProcessor that stores the information.
    */
   private CSVProcessor readCSV(String csvPath) {
-    Map<String, List<String>> temp = new HashMap<>();
     CSVProcessor processor = new CSVProcessor();
 
     try (BufferedReader inputFile = new BufferedReader(new FileReader(csvPath))) {
