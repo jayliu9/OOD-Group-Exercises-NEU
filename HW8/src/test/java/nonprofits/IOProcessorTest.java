@@ -77,4 +77,12 @@ public class IOProcessorTest {
     msg = msg.trim();
     assertEquals("Dear Lenna Paprocki" + System.lineSeparator() + "Good Morning!", msg);
   }
+
+  @Test
+  public void CreateFilesInExistingFolder() throws ParseException {
+    Option newOption = cmd.getOptions().get(2);
+    newOption.setArgName(tempFolder.getRoot().getPath());
+    IOProcessor newProcessor = new IOProcessor(cmd);
+    newProcessor.generalFiles();
+  }
 }
