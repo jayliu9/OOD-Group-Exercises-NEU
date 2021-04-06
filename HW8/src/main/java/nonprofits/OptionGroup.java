@@ -80,6 +80,11 @@ public class OptionGroup {
     return keyOptionsNames;
   }
 
+  /**
+   * Checks if two objects are equal
+   * @param o the object to compare this to
+   * @return true if these two objects are equal, false otherwise.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -92,11 +97,19 @@ public class OptionGroup {
     return Objects.equals(optionGroup, group.optionGroup);
   }
 
+  /**
+   * Gets a hash code value for the object.
+   * @return a hash code value for the object.
+   */
   @Override
   public int hashCode() {
     return Objects.hash(optionGroup);
   }
 
+  /**
+   * Creates a string representation of the OptionGroup.
+   * @return a string representation of the OptionGroup.
+   */
   @Override
   public String toString() {
     return "OptionGroup{" +
