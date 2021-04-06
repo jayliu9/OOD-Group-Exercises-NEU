@@ -86,6 +86,7 @@ public class Option {
     return this.hasArg;
   }
 
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
