@@ -8,22 +8,31 @@ public class Main {
 
     CommandLineParser commandLineParser = new DefaultParser();
 
-    Option op1 = new Option("nonprofits", false, false, "Generate email messages.");
-    Option op11 = new Option("email-template", true, false, "email template.");
+    Option emailOption = new Option("email", false, false, "--email Generate email messages. "
+        + "If this option is provided, then --email-template must also be provided.");
 
-    Option op2 = new Option("letter", false, false, "Generate letter messages.");
-    Option op22 = new Option("letter-template", true, false, "letter template.");
+    Option emailTemplateOption = new Option("email-template", true, false, "--email-template <path/to/file> "
+        + "A filename for the email template.");
+
+    Option letterOption = new Option("letter", false, false, "--letter Generate letters. If this option "
+        + "is provided, then --letter-template must also be provided.");
+
+    Option letterTemplateOption = new Option("letter-template", true, false, "--letter-template <path/to/file> "
+        + "A filename for the letter template.");
 
     OptionGroup group = new OptionGroup();
-    group.addOption(op1, op11);
-    group.addOption(op2, op22);
+    group.addOption(emailOption, emailTemplateOption);
+    group.addOption(letterOption, letterTemplateOption);
 
-    Option op3 = new Option("output-dir", true, true, "set output dir.");
-    Option op4 = new Option("csv-file", true, true, "set csv file.");
+    Option outputDirOption = new Option("output-dir", true, true, "--output-dir <path/to/folder> The folder "
+        + "to store all generated");
+
+    Option csvFileOption = new Option("csv-file", true, true, "--csv-file <path/to/folder> The CSV file to "
+        + "process. This option is required.");
 
     options.addOptionGroup(group);
-    options.addOption(op3);
-    options.addOption(op4);
+    options.addOption(outputDirOption);
+    options.addOption(csvFileOption);
 
     HelpFormatter formatter = new HelpFormatter();
 
@@ -33,7 +42,6 @@ public class Main {
         + "--letter --letter-template letter-template.txt --output-dir letters"
         + "--csv-file customer.csv";
     formatter.setExamples(examples);
-
 
     try {
       commandLine = commandLineParser.parse(options, args);
