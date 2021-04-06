@@ -49,7 +49,23 @@ public class Options {
       }
       requiredOpts.add(optName);
     }
-    opts.add(opt);
+    // add opt when its opt name is unique.
+    if(!this.isDuplicated(optName)) {
+      opts.add(opt);
+    }
+  }
+
+  /**
+   * check if the optName has already existed
+   * @param optName option name
+   * @return true if there it is duplicated false otherwise
+   */
+  private boolean isDuplicated(String optName) {
+    for (Option option: this.opts) {
+      if (option.getOpt().equals(optName))
+        return true;
+    }
+    return false;
   }
 
   /**

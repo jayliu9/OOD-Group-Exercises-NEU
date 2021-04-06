@@ -69,6 +69,7 @@ public class Option {
    * Set the value to this Option. If the option cannot accept argument,then add the value. 
    * Otherwise, throw a runtime exception.
    * @param value The value to be set to this Option
+   * @throws ParseException if Option can't accept argument, throw Exception
    */
   public void setArgName(String value) throws ParseException {
     if (!acceptsArg()) {
@@ -84,7 +85,6 @@ public class Option {
   public boolean acceptsArg() {
     return this.hasArg;
   }
-
 
   @Override
   public boolean equals(Object o) {
