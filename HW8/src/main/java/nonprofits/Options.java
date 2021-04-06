@@ -15,8 +15,10 @@ import java.util.Set;
 public class Options {
 
   private final List<Option> opts = new ArrayList<>();
-  private final List<Object> requiredOpts = new ArrayList<>();
+  private final List<String> requiredOpts = new ArrayList<>();
   private final Map<String, OptionGroup> optionGroups = new HashMap<>();
+  private static final int SECOND_CHARACTER = 2;
+
 
   public List<Option> getOptions() {
     return this.opts;
@@ -73,8 +75,8 @@ public class Options {
    *
    * @return the required options
    */
-  public List<Object> getRequiredOptions() {
-    return requiredOpts;
+  public List<String> getRequiredOptions() {
+    return this.requiredOpts;
   }
 
   /**
@@ -102,19 +104,18 @@ public class Options {
   }
 
   /**
-   * Returns the options starting with the name specified.
+   * Returns the option with the name specified.
    *
-   * @param opt the partial name of the option
-   * @return the options matching the partial name specified, or an empty list if none matches
+   * @param opt the name of the option
+   * @return the option matching the name specified, or null if none matches.
    */
-  public List<String> getMatchingOptions(String opt) {
-    opt = opt.substring(2, opt.length());
-    List<String> matchingOpts = new ArrayList<>();
-    for (Option option : this.opts) {
+  public Option getMatchingOption(String opt) {
+    opt = opt.substring(SECOND_CHARACTER, opt.length());
+    for (Option option : this.getOptions()) {
       if (opt.equals(option.getOpt()))
-        return Arrays.asList(option.getOpt());
+        return option;
     }
-    return matchingOpts;
+    return null;
   }
 
   @Override
