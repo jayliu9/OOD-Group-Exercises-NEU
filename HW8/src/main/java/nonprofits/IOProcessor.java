@@ -13,6 +13,10 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Represents the processor which takes parsed command line arguments (and options) and outputs the
+ * appropriate text files.
+ */
 public class IOProcessor {
 
   private static final String TEMPLATE_MARK = "template";
@@ -25,6 +29,10 @@ public class IOProcessor {
   private String outputPath;
   private String infoPath;
 
+  /**
+   * Constructor for the IOProcessor class.
+   * @param cmd The commandLine object, which stores the parsed options.
+   */
   public IOProcessor(CommandLine cmd) {
     this.templateOptions = cmd.findOptions(TEMPLATE_MARK);
     this.outputPath = cmd.getOptionValue(OUTPUT_MARK);
@@ -99,6 +107,10 @@ public class IOProcessor {
     }
   }
 
+  /**
+   * Generates the text files per row in the CSV file to the given folder, with all placeholders
+   * replaced with the the appropriate value.
+   */
   public void generalFiles() {
     //process csv file.
     CSVProcessor csvInfo = this.readCSV(this.infoPath);
@@ -106,21 +118,31 @@ public class IOProcessor {
     List<String> headers = csvInfo.getHeaders();
     List<List<String>> rows = csvInfo.getInfo();
 
-    this.createFolder(this.outputPath);
+    this.createFolder(this.outputPath); // creates folder
 
+    // search template options in commandline
     for (Option templateOpt : this.templateOptions) {
-      String content = this.readTemplate(templateOpt.getArgName());
-      Template template = new Template(content);
+      String content = this.readTemplate(templateOpt.getArgName()); // get the template path from the argument of the option
+      Template template = new Template(content); // create template object, ready to replace its placeholders.
 
+      // replaces placeholders with the row in CSV file and output the text file in given folder
       for (List<String> eachRow : rows) {
-        String modifiedMsg = template.replaceHolders(headers, eachRow);
-        String newFile = this.generateFileName(templateOpt, headers, eachRow);
-        File output = new File(this.outputPath, newFile);
-        write(modifiedMsg, output);
+        String modifiedMsg = template.replaceHolders(headers, eachRow); // replaces placeholders
+        String newFile = this.generateFileName(templateOpt, headers, eachRow); // generate file name
+        File output = new File(this.outputPath, newFile);  // File object to store folder path and file name
+        write(modifiedMsg, output);  // write text file to the given folder
       }
     }
   }
 
+  /**
+   * Generates the name of the text file according to a support's first name, last name and
+   * the type of the template.
+   * @param templateOpt The template option
+   * @param headers The headers in the CSV file
+   * @param eachRow A single row in the CSV file
+   * @return The name of the text file
+   */
   private String generateFileName(Option templateOpt, List<String> headers, List<String> eachRow) {
     int firstNameIndex = headers.indexOf("first_name");
     int lastNameIndex = headers.indexOf("last_name");
@@ -137,6 +159,10 @@ public class IOProcessor {
     return null;
   }
 
+  /**
+   * Creates the folder in the given path
+   * @param path The path to create the folder
+   */
   private void createFolder(String path) {
     File file = new File(path);
     if (!file.exists())

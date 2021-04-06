@@ -2,12 +2,13 @@ package nonprofits;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Abstract class representing common fields and behaviors of a template.
+ * Represents a template.
  */
 public class Template {
 
@@ -72,5 +73,43 @@ public class Template {
       afterReplaced = afterReplaced.replace(placeholder, infoRow.get(index));
     }
     return afterReplaced;
+  }
+
+  /**
+   * Checks if two objects are equal
+   * @param o the object to compare this to
+   * @return true if these two objects are equal, false otherwise.
+   */
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Template template = (Template) o;
+    return this.content.equals(template.content) && this.placeholders.equals(template.placeholders);
+  }
+
+  /**
+   * Gets a hash code value for the object.
+   * @return a hash code value for the object.
+   */
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.content, this.placeholders);
+  }
+
+  /**
+   * Creates a string representation of the Catalog.
+   * @return a string representation of the Catalog.
+   */
+  @Override
+  public String toString() {
+    return "Template{" +
+        "content='" + content + '\'' +
+        ", placeholders=" + placeholders +
+        '}';
   }
 }
