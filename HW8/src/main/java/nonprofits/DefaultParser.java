@@ -11,7 +11,6 @@ public class DefaultParser implements CommandLineParser {
   private String currentToken;
   private List<String> expectedOpts;
   private static final int SECOND_CHARACTER = 2;
-  private static final int ONE_CHARACTER = 1;
 
   /**
    * Parse the arguments according to the specified options.
@@ -159,7 +158,7 @@ public class DefaultParser implements CommandLineParser {
     this.currentOption.setArgName(token);
     this.currentOption = null;
   }
-  
+
   /**
    * Handles an option token.
    *
