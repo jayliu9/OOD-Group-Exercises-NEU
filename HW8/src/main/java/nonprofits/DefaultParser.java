@@ -159,20 +159,7 @@ public class DefaultParser implements CommandLineParser {
     this.currentOption.setArgName(token);
     this.currentOption = null;
   }
-
-  /**
-   * Handles an unknown token. If the token starts with a dash an UnrecognizedOptionException is
-   * thrown. Otherwise the token is added to the arguments of the command line.
-   *
-   * @param token the command line token to handle
-   * @throws UnrecognizedOptionException if the token starts with a dash.
-   */
-  private void handleUnknownToken(String token) throws UnrecognizedOptionException {
-    if (token.startsWith("-") && token.length() > ONE_CHARACTER) {
-      throw new UnrecognizedOptionException("Unrecognized option: " + token + "\n");
-    }
-  }
-
+  
   /**
    * Handles an option token.
    *
