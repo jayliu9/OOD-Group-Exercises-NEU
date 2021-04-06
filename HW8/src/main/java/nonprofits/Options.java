@@ -1,7 +1,6 @@
 package nonprofits;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,14 +18,18 @@ public class Options {
   private final Map<String, OptionGroup> optionGroups = new HashMap<>();
   private static final int SECOND_CHARACTER = 2;
 
-
+  /**
+   * Gets all the options.
+   *
+   * @return all the options.
+   */
   public List<Option> getOptions() {
     return this.opts;
   }
 
   /**
-   * Adds the specified option group.
-   * When the group is added, its all options including keyOptions and valueOptions are automatically added to the opts List.
+   * Adds the specified option group. When the group is added, its all options including keyOptions
+   * and valueOptions are automatically added to the opts List.
    *
    * @param group the OptionGroup that is to be added.
    */
@@ -52,20 +55,22 @@ public class Options {
       requiredOpts.add(optName);
     }
     // add opt when its opt name is unique.
-    if(!this.isDuplicated(optName)) {
+    if (!this.isDuplicated(optName)) {
       opts.add(opt);
     }
   }
 
   /**
    * check if the optName has already existed
+   *
    * @param optName option name
    * @return true if there it is duplicated false otherwise
    */
   private boolean isDuplicated(String optName) {
-    for (Option option: this.opts) {
-      if (option.getOpt().equals(optName))
+    for (Option option : this.opts) {
+      if (option.getOpt().equals(optName)) {
         return true;
+      }
     }
     return false;
   }
@@ -112,12 +117,18 @@ public class Options {
   public Option getMatchingOption(String opt) {
     opt = opt.substring(SECOND_CHARACTER, opt.length());
     for (Option option : this.getOptions()) {
-      if (opt.equals(option.getOpt()))
+      if (opt.equals(option.getOpt())) {
         return option;
+      }
     }
     return null;
   }
 
+  /**
+   * Checks if two objects are equal
+   * @param o the object to compare this to
+   * @return true if these two objects are equal, false otherwise.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -128,15 +139,22 @@ public class Options {
     }
     Options options = (Options) o;
     return Objects.equals(opts, options.opts) && Objects
-        .equals(requiredOpts, options.requiredOpts) && Objects
         .equals(optionGroups, options.optionGroups);
   }
 
+  /**
+   * Gets a hash code value for the object.
+   * @return a hash code value for the object.
+   */
   @Override
   public int hashCode() {
-    return Objects.hash(opts, requiredOpts, optionGroups);
+    return Objects.hash(opts, optionGroups);
   }
 
+  /**
+   * Creates a string representation of the Options.
+   * @return a string representation of the Options.
+   */
   @Override
   public String toString() {
     return "Options{" +
