@@ -153,10 +153,8 @@ public class IOProcessor {
     String optName = templateOpt.getOpt();
     Pattern p = Pattern.compile(CLASS_RE);
     Matcher m = p.matcher(optName);
-    if (m.find()) {
-      return firstName + "_" + lastName + "_" + m.group(1) + ".txt";
-    }
-    return null;
+    m.find();
+    return firstName + "_" + lastName + "_" + m.group(1) + ".txt";
   }
 
   /**

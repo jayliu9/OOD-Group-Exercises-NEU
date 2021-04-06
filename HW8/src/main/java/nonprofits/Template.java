@@ -51,13 +51,10 @@ public class Template {
    * @return The words in the placeholder.
    */
   private String processHolder(String placeholder) {
-    String processed = "";
     Pattern pattern = Pattern.compile(RE);
     Matcher m = pattern.matcher(placeholder);
-    if (m.matches()) {
-      processed = m.group(1);
-    }
-    return processed;
+    m.matches();
+    return m.group(1);
   }
 
   /**
@@ -89,7 +86,7 @@ public class Template {
       return false;
     }
     Template template = (Template) o;
-    return this.content.equals(template.content) && this.placeholders.equals(template.placeholders);
+    return this.content.equals(template.content);
   }
 
   /**
@@ -98,18 +95,17 @@ public class Template {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(this.content, this.placeholders);
+    return Objects.hash(this.content);
   }
 
   /**
-   * Creates a string representation of the Catalog.
-   * @return a string representation of the Catalog.
+   * Creates a string representation of the Template.
+   * @return a string representation of the Template.
    */
   @Override
   public String toString() {
     return "Template{" +
-        "content='" + content + '\'' +
-        ", placeholders=" + placeholders +
+        "content='" + content +
         '}';
   }
 }
