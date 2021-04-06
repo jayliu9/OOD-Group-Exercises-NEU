@@ -59,13 +59,13 @@ public class DefaultParser implements CommandLineParser {
       this.handleOptionValue(token);
     } else if (token.startsWith("--")) {
       this.handleCommandOption(token);
-    } else {
-      this.handleUnknownToken(token);
     }
-
-    if (this.currentOption != null && !this.currentOption.acceptsArg()) {
-      this.currentOption = null;
-    }
+//    else {
+//      this.handleUnknownToken(token);
+//    }
+//    if (this.currentOption != null && !this.currentOption.acceptsArg()) {
+//      this.currentOption = null;
+//    }
   }
 
   /**
