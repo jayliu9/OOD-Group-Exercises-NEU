@@ -50,39 +50,37 @@ public class DefaultParserTest {
 
   @Test
   public void parse() throws ParseException {
-    assertEquals("CommandLine{"
-            + "options=["
-            + "Option{opt='email', value='null', required=false, description='--email Generate email messages. If this option is provided, then --email-template must also be provided.', hasArg=false}, "
-            + "Option{opt='email-template', value='email-template.txt', required=false, description='--email-template <path/to/file> A filename for the email template.', hasArg=true}, "
-            + "Option{opt='letter', value='null', required=false, description='--letter Generate letters. If this option is provided, then --letter-template must also be provided.', hasArg=false}, "
-            + "Option{opt='letter-template', value='letter-template.txt', required=false, description='--letter-template <path/to/file> A filename for the letter template.', hasArg=true}, "
-            + "Option{opt='output-dir', value='test', required=true, description='--output-dir <path/to/folder> The folder to store all generated', hasArg=true}, "
-            + "Option{opt='csv-file', value='supporters.csv', required=true, description='--csv-file <path/to/folder> The CSV file to process. This option is required.', hasArg=true}]}"
-        , commandLineParser.parse(options, arguments).toString());
+    CommandLine commandLine = new CommandLine();
+    commandLine.addOption(emailOpt);
+    commandLine.addOption(emailTemplateOpt);
+    commandLine.addOption(letterOpt);
+    commandLine.addOption(letterTemplateOpt);
+    commandLine.addOption(outputDirOpt);
+    commandLine.addOption(csvFileOpt);
 
-    String[] arguments1 = new String[]{"--email", "--letter", "--email-template", "email-template.txt", "--letter-template", "letter-template.txt", "--output-dir", "test", "--csv-file", "supporters.csv"};
-    assertEquals("CommandLine{"
-        + "options=["
-        + "Option{opt='email', value='null', required=false, description='--email Generate email messages. If this option is provided, then --email-template must also be provided.', hasArg=false}, "
-        + "Option{opt='letter', value='null', required=false, description='--letter Generate letters. If this option is provided, then --letter-template must also be provided.', hasArg=false}, "
-        + "Option{opt='email-template', value='email-template.txt', required=false, description='--email-template <path/to/file> A filename for the email template.', hasArg=true}, "
-        + "Option{opt='letter-template', value='letter-template.txt', required=false, description='--letter-template <path/to/file> A filename for the letter template.', hasArg=true}, "
-        + "Option{opt='output-dir', value='test', required=true, description='--output-dir <path/to/folder> The folder to store all generated', hasArg=true}, "
-        + "Option{opt='csv-file', value='supporters.csv', required=true, description='--csv-file <path/to/folder> The CSV file to process. This option is required.', hasArg=true}]}"
-        ,commandLineParser.parse(options, arguments1).toString());
+    assertEquals(commandLine, commandLineParser.parse(options, arguments));
+  }
+
+  @Test (expected = ParseException.class)
+  public void parseNullString() throws ParseException {
+    commandLineParser.parse(options, null);
   }
 
   @Test (expected = MissingOptionException.class)
-  public void missingRequiredOption() throws ParseException {
+  public void missingOneRequiredOption() throws ParseException {
     String[] missingOutputDirOption = new String[]{"--email", "--email-template", "email-template.txt", "--letter", "--letter-template", "letter-template.txt", "--csv-file", "supporters.csv"};
     commandLineParser.parse(options, missingOutputDirOption);
     String[] missingCsvFileOption = new String[]{"--email", "--email-template", "email-template.txt", "--letter", "--letter-template", "letter-template.txt", "--output-dir", "letters"};
     commandLineParser.parse(options, missingCsvFileOption);
+  }
+
+  @Test (expected = MissingOptionException.class)
+  public void missingAllRequiredOption() throws ParseException {
     String[] missingOutputDirAndCsvFileOptions = new String[]{"--email", "--email-template", "email-template.txt"};
     commandLineParser.parse(options, missingOutputDirAndCsvFileOptions);
-    String[] missingOptions = new String[]{};
-    commandLineParser.parse(options, missingOptions);
   }
+
+
   @Test (expected = MissingOptionException.class)
   public void missingEmailAndLetterOption() throws ParseException {
     String[] missingEmailAndLetterOption = new String[]{"--email-template", "email-template.txt",
