@@ -51,7 +51,7 @@ public class HelpFormatter {
   }
 
   /**
-   * print help message
+   * print help messages
    * @param options all candidate options
    */
   public void printHelp(Options options) {
