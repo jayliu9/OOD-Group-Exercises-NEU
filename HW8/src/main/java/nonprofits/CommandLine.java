@@ -26,7 +26,7 @@ public class CommandLine {
 
 
   /**
-   * Retrieves the option object given the long or short option as a String
+   * Retrieves the option object given the option as a String.
    *
    * @param opt The name of the option.
    * @return Canonicalized option
