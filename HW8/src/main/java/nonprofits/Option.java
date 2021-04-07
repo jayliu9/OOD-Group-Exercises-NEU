@@ -2,6 +2,11 @@ package nonprofits;
 
 import java.util.Objects;
 
+/**
+ * An Option class, describing a single command-line option. It maintains information regarding the
+ * name of the option, a flag indicating if the option is required to be present, a flag indicating
+ * if an argument is required for this option, and a self-documenting description of the option.
+ */
 public class Option {
 
   private String opt;
@@ -66,8 +71,9 @@ public class Option {
   }
 
   /**
-   * Set the value to this Option. If the option cannot accept argument,then add the value. 
+   * Set the value to this Option. If the option cannot accept argument,then add the value.
    * Otherwise, throw a runtime exception.
+   *
    * @param value The value to be set to this Option
    * @throws ParseException if Option can't accept argument, throw Exception
    */
@@ -80,13 +86,18 @@ public class Option {
 
   /**
    * Tells if the option can accept an argument.
+   *
    * @return true if the option can accept an argument; false otherwise.
    */
   public boolean acceptsArg() {
     return this.hasArg;
   }
 
-
+  /**
+   * Checks if two objects are equal
+   * @param o the object to compare this to
+   * @return true if these two objects are equal, false otherwise.
+   */
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -101,11 +112,19 @@ public class Option {
         && Objects.equals(description, option.description);
   }
 
+  /**
+   * Gets a hash code value for the object.
+   * @return a hash code value for the object.
+   */
   @Override
   public int hashCode() {
     return Objects.hash(opt, value, required, description, hasArg);
   }
 
+  /**
+   * Creates a string representation of the Option.
+   * @return a string representation of the Option.
+   */
   @Override
   public String toString() {
     return "Option{" +

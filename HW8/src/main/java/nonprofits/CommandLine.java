@@ -5,11 +5,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Represents list of arguments parsed against a Options descriptor. It allows querying of a boolean
- * hasOption(String opt), in addition to retrieving the getOptionArg(String opt) for options
- * requiring arguments.
- * <p>
- * Additionally, any left-over or unrecognized arguments, are available for further processing.
+ * A CommandLine class, represent a list of Options.
  */
 public class CommandLine {
 
