@@ -57,7 +57,7 @@ public class IOProcessorTest {
 
   @Test
   public void testGenerateFiles() {
-    io.generalFiles();
+    io.generateFiles();
     String msg = "";
     String fileName = "Lenna_Paprocki_letter.txt";
     File read = new File(tempFolder.getRoot().getPath() + File.separator + "folder", fileName);
@@ -83,6 +83,6 @@ public class IOProcessorTest {
     Option newOption = cmd.getOptions().get(2);
     newOption.setArgName(tempFolder.getRoot().getPath());
     IOProcessor newProcessor = new IOProcessor(cmd);
-    newProcessor.generalFiles();
+    newProcessor.generateFiles();
   }
 }

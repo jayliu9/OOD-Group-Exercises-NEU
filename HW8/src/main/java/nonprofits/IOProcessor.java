@@ -111,26 +111,22 @@ public class IOProcessor {
    * Generates the text files per row in the CSV file to the given folder, with all placeholders
    * replaced with the the appropriate value.
    */
-  public void generalFiles() {
-    //process csv file.
+  public void generateFiles() {
     CSVProcessor csvInfo = this.readCSV(this.infoPath);
-    // get headers and rows
     List<String> headers = csvInfo.getHeaders();
     List<List<String>> rows = csvInfo.getInfo();
 
-    this.createFolder(this.outputPath); // creates folder
+    this.createFolder(this.outputPath);
 
-    // search template options in commandline
     for (Option templateOpt : this.templateOptions) {
-      String content = this.readTemplate(templateOpt.getArgName()); // get the template path from the argument of the option
-      Template template = new Template(content); // create template object, ready to replace its placeholders.
+      String content = this.readTemplate(templateOpt.getArgName());
+      Template template = new Template(content);
 
-      // replaces placeholders with the row in CSV file and output the text file in given folder
       for (List<String> eachRow : rows) {
-        String modifiedMsg = template.replaceHolders(headers, eachRow); // replaces placeholders
-        String newFile = this.generateFileName(templateOpt, headers, eachRow); // generate file name
-        File output = new File(this.outputPath, newFile);  // File object to store folder path and file name
-        write(modifiedMsg, output);  // write text file to the given folder
+        String modifiedMsg = template.replaceHolders(headers, eachRow);
+        String newFile = this.generateFileName(templateOpt, headers, eachRow);
+        File output = new File(this.outputPath, newFile);
+        write(modifiedMsg, output);
       }
     }
   }

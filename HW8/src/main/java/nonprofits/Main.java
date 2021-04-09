@@ -46,7 +46,7 @@ public class Main {
     try {
       commandLine = commandLineParser.parse(options, args);
       IOProcessor io = new IOProcessor(commandLine);
-      io.generalFiles();
+      io.generateFiles();
     } catch (ParseException e) {
       System.out.println("Error! " + e.getMessage());
       formatter.printHelp(options);
