@@ -79,7 +79,7 @@ public class IOProcessorTest {
   }
 
   @Test
-  public void CreateFilesInExistingFolder() throws ParseException {
+  public void createFilesInExistingFolder() throws ParseException {
     Option newOption = cmd.getOptions().get(2);
     newOption.setArgName(tempFolder.getRoot().getPath());
     IOProcessor newProcessor = new IOProcessor(cmd);
