@@ -19,6 +19,7 @@ public class OptionsTest {
   private OptionGroup optionGroup;
 
   private Options options;
+  private Options nullType;
 
   @Before
   public void setUp() throws Exception {
@@ -34,6 +35,7 @@ public class OptionsTest {
     optionGroup.addOption(op2, op22);
 
     options = new Options();
+    nullType = null;
   }
 
   @Test
@@ -102,7 +104,7 @@ public class OptionsTest {
   public void testEquals() {
     options.addOption(op1);
     assertTrue(options.equals(options));
-    assertFalse(options.equals(null));
+    assertFalse(options.equals(nullType));
     assertFalse(options.equals(""));
 
     Options that = new Options();

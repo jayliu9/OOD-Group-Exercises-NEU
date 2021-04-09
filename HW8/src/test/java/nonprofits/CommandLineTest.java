@@ -10,6 +10,7 @@ import org.junit.Test;
 
 public class CommandLineTest {
   private CommandLine commandLine;
+  private CommandLine nullType;
   private Option emailOpt;
   private Option emailTemplateOpt;
   private Option letterOpt;
@@ -33,6 +34,7 @@ public class CommandLineTest {
         + "process. This option is required.");
 
     commandLine= new CommandLine();
+    nullType = null;
     commandLine.addOption(emailOpt);
     commandLine.addOption(emailTemplateOpt);
     commandLine.addOption(letterOpt);
@@ -75,7 +77,7 @@ public class CommandLineTest {
   @Test
   public void testEquals() {
     assertTrue(commandLine.equals(commandLine));
-    assertFalse(commandLine.equals(null));
+    assertFalse(commandLine.equals(nullType));
     assertFalse(commandLine.equals(""));
 
     CommandLine that = new CommandLine();

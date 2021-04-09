@@ -115,9 +115,9 @@ public class Options {
    * @return the option matching the name specified, or null if none matches.
    */
   public Option getMatchingOption(String opt) {
-    opt = opt.substring(SECOND_CHARACTER, opt.length());
+    String trimmedOpt = opt.substring(SECOND_CHARACTER, opt.length());
     for (Option option : this.getOptions()) {
-      if (opt.equals(option.getOpt())) {
+      if (trimmedOpt.equals(option.getOpt())) {
         return option;
       }
     }

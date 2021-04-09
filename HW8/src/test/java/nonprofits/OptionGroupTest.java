@@ -17,6 +17,7 @@ public class OptionGroupTest {
   private Option letterOption;
   private Option letterTemplateOption;
   private OptionGroup optionGroup;
+  private OptionGroup nullType;
 
   @Before
   public void setUp() throws Exception {
@@ -26,6 +27,7 @@ public class OptionGroupTest {
     letterTemplateOption = new Option("letter-template", true, false, "letter template.");
 
     optionGroup = new OptionGroup();
+    nullType = null;
 
     optionGroup.addOption(emailOption, emailTemplateOption);
     optionGroup.addOption(letterOption, letterTemplateOption);
@@ -78,7 +80,7 @@ public class OptionGroupTest {
   @Test
   public void testEquals() {
     assertTrue(optionGroup.equals(optionGroup));
-    assertFalse(optionGroup.equals(null));
+    assertFalse(optionGroup.equals(nullType));
     assertFalse(optionGroup.equals(""));
 
     OptionGroup that = new OptionGroup();
