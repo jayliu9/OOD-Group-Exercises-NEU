@@ -1,6 +1,6 @@
 package nonprofits;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 public class DefaultParser implements CommandLineParser {
@@ -59,12 +59,6 @@ public class DefaultParser implements CommandLineParser {
     } else if (token.startsWith("--")) {
       this.handleCommandOption(token);
     }
-//    else {
-//      this.handleUnknownToken(token);
-//    }
-//    if (this.currentOption != null && !this.currentOption.acceptsArg()) {
-//      this.currentOption = null;
-//    }
   }
 
   /**
@@ -155,6 +149,9 @@ public class DefaultParser implements CommandLineParser {
     if (token.startsWith("--")) {
       throw new MissingArgumentException(this.currentOption);
     }
+    // Make sure that program works correctly regardless of how user's operating system represents paths and files.
+    token = token.replace("/", File.separator); // Linux
+    token = token.replace("\\", File.separator); // Windows
     this.currentOption.setArgName(token);
     this.currentOption = null;
   }
