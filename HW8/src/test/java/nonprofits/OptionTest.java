@@ -7,10 +7,12 @@ import org.junit.Test;
 
 public class OptionTest {
   private Option option;
+  private Option nullType;
 
   @Before
   public void setUp() throws Exception {
     option = new Option("output-dir", true, true, "set output dir.");
+    nullType = null;
   }
 
   @Test
@@ -56,7 +58,7 @@ public class OptionTest {
   @Test
   public void testEquals() {
     assertTrue(option.equals(option));
-    assertFalse(option.equals(null));
+    assertFalse(option.equals(nullType));
     assertFalse(option.equals(""));
     Option that = new Option("output-dir", true, true, "set output dir.");
     assertTrue(option.equals(that));
