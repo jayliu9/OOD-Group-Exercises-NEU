@@ -1,6 +1,5 @@
 package nonprofits;
 
-import java.io.File;
 import java.util.List;
 
 public class DefaultParser implements CommandLineParser {
@@ -149,10 +148,7 @@ public class DefaultParser implements CommandLineParser {
     if (token.startsWith("--")) {
       throw new MissingArgumentException(this.currentOption);
     }
-    // Make sure that program works correctly regardless of how user's operating system represents paths and files.
-    String formattedToken = token.replace("/", File.separator); // Linux
-    formattedToken = token.replace("\\", File.separator); // Windows
-    this.currentOption.setArgName(formattedToken);
+    this.currentOption.setArgName(token);
     this.currentOption = null;
   }
 
