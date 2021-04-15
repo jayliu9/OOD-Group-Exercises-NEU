@@ -47,9 +47,9 @@ public class Main {
 //      System.out.println(commandLine);
 
 
-      Writer writer = new Writer();
-      writer.write(commandLine, "todos.csv");
-    } catch (ParseException | java.text.ParseException e) {
+      IOBridge io = new IOBridge(commandLine);
+      io.processTodos();
+    } catch (ParseException | java.text.ParseException | TodoNotFoundException e) {
       System.out.println("Error! " + e.getMessage());
       formatter.printHelp(options);
     }

@@ -3,15 +3,24 @@ package problem;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import problem.ToDo.Builder;
 
+/**
+ * This class stores information from csv file, including headers and todolist
+ */
 public class ToDos {
 
+  private static final String SPLIT_REGEX = "\",\"";
+
+  private String headers;
   private List<ToDo> todoList;
 
   public ToDos() {
+    this.headers = null;
     this.todoList = new ArrayList<>();
   }
 
@@ -20,76 +29,86 @@ public class ToDos {
   }
 
 
+  /**
+   * Reads a ToDo object from a line
+   * @param line
+   * @throws ParseException
+   */
+  public void readTodo(String line) throws ParseException {
+    this.todoList.add(this.storeFormatter(line));
+  }
+
+
+  /**
+   * Adds a ToDo instance to ToDos list
+   * @param todo
+   */
   public void add(ToDo todo){
     this.todoList.add(todo);
   }
 
+  public void setHeaders(String headers) {
+    this.headers = headers;
+  }
+
+  public String getHeaders() {
+    return this.headers;
+  }
 
   /**
-   * The user set the completed status of an existing To\do to true.
+   * Converts a String to a To\Do instance.
+   * @param info
+   * @return
+   */
+  private ToDo storeFormatter(String info) throws ParseException {
+    String trimmed = this.trimHeadTail(info);
+    String[] split = trimmed.split(SPLIT_REGEX);
+    List<String> row = Arrays.asList(split);
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    Date date = sdf.parse(row.get(3));
+    return new ToDo.Builder(row.get(1)).
+            setID(row.get(0))
+            .setCompleted(Boolean.getBoolean(row.get(2)))
+            .addDue(date)
+            .addPriority(Integer.parseInt(row.get(4)))
+            .addCategory(row.get(5)).build();
+  }
+
+  private String trimHeadTail(String s) {
+    return s.substring(1, s.length() - 1);
+  }
+
+  /**
+   * To\Do -> String
    * @param toDo
-   * @throws TodoNotFoundException
-   */
-  public void completeTodo(ToDo toDo) throws TodoNotFoundException {
-    if (!this.todoList.contains(toDo)) {
-      throw new TodoNotFoundException(toDo + " is not existing!");
-    }
-    toDo.setCompleted(true);
-  }
-
-
-  /**
-   * Display Todos by default.
    * @return
    */
-  public List<ToDo> displayTodosByDefault() {
-    return this.todoList;
+  private String outputFormatter(ToDo toDo) {
+    StringBuilder todoInfo = new StringBuilder();
+    todoInfo.append("\"").append(toDo.getID()).append("\",");
+    todoInfo.append("\"").append(toDo.getText()).append("\",");
+    todoInfo.append("\"").append(toDo.getCompleted()).append("\",");
+    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+    todoInfo.append("\"").append(sdf.format(toDo.getDue())).append("\",");
+    todoInfo.append("\"").append(toDo.getPriority()).append("\",");
+    todoInfo.append("\"").append(toDo.getCategory()).append("\"");
+    return todoInfo.toString();
   }
 
-  /**
-   * Filter the list to only include incomplete Todos;
-   */
-  public List<ToDo> displayIncompleteTodos() {
-    List<ToDo> incompleteTodos = new ArrayList<>();
-    for (ToDo toDo : this.todoList) {
-      if (!toDo.isCompleted()) {
-        incompleteTodos.add(toDo);
-      }
+  public String generateMsg() {
+    String msg = this.headers + System.lineSeparator();
+    for (ToDo todo : this.todoList) {
+      msg += this.outputFormatter(todo) + System.lineSeparator();
     }
-    return incompleteTodos;
+    return msg;
   }
 
-  /**
-   * Filter the list to only include Todos with a particular category;
-   * @param category
-   * @return
-   */
-  public List<ToDo> displayTodosByCategory(String category) {
-    List<ToDo> oneCategoryTodos = new ArrayList<>();
+  public ToDo findToDo(String iD) throws TodoNotFoundException {
     for (ToDo toDo : this.todoList) {
-      if (!toDo.getCategory().equals(category)) {
-        oneCategoryTodos.add(toDo);
-      }
+      if (toDo.getID().equals(iD))
+        return toDo;
     }
-    return oneCategoryTodos;
+    throw new TodoNotFoundException(iD + " is not existing!");
   }
-
-  /**
-   * Sort the Todos by date (ascending);
-   */
-  public List<ToDo> displayTodosByDate() {
-    List<ToDo> oriTodos = this.todoList;
-    Collections.sort(oriTodos, new DateComparator());
-    return oriTodos;
-  }
-
-  /**
-   * Sort the Todos by priority (ascending);
-   */
-  public List<ToDo> displayTodosByPriority() {
-    List<ToDo> oriTodos = this.todoList;
-    Collections.sort(oriTodos, new PriorityComparator());
-    return oriTodos;
-  }
-
 }
+
