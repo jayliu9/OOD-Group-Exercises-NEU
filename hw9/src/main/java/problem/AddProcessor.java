@@ -4,7 +4,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import problem.ToDo.Builder;
 
-public class AddOptionProcessor implements IProcessor {
+public class AddProcessor implements IProcessor {
 
   /**
    * Using Builder Pattern to create a new ToDo object to add

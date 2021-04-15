@@ -13,14 +13,6 @@ public class Writer {
   }
 
   public static void write(String msg, String filepath) {
-/*
-    Reader reader = new Reader();
-
-    ToDos toDos = reader.read(filepath);
-
-    Processor processor = new Processor();
-    toDos = processor.process(commandLine, toDos);
-*/
 
     try (BufferedWriter outputFile = new BufferedWriter(new FileWriter(filepath))) {
 

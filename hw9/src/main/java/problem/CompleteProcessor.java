@@ -1,6 +1,6 @@
 package problem;
 
-public class CompleteOptionProcessor implements IProcessor {
+public class CompleteProcessor implements IProcessor {
 
   @Override
   public void process(CommandLine commandLine, ToDos toDos)

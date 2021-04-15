@@ -12,9 +12,9 @@ public class ProcessorFactory {
     public static IProcessor makeProcessor(String optName) {
         switch (optName) {
             case ADD:
-                return new AddOptionProcessor();
+                return new AddProcessor();
             case COMPLETE:
-                return new CompleteOptionProcessor();
+                return new CompleteProcessor();
             case DISPLAY:
                 return new DisplayProcessor();
         }
