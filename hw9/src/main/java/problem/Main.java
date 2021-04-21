@@ -1,8 +1,5 @@
 package problem;
 
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Date;
 
 public class Main {
 
@@ -23,14 +20,22 @@ public class Main {
 
     Option dueOption = new Option("due", true, false, "--due (Optional) Sets the due date of a new todo. You may choose how the date should be formatted.");
 
+    Option sortByDateOption = new Option("sort-by-date", false, false, "--sort-by-date (Optional) If --display is provided, sort the list of todos by date order (ascending). be combined with --sort-by-priority.");
 
-    OptionGroup group = new OptionGroup();
-    group.addOption(addTodoOption, Arrays.asList(todoTextOption, completedOption, dueOption));
+    Option sortByPriorityOption = new Option("sort-by-priority", false, false, "--sort-by-priority (Optional) If --display is provided, sort the list of todos by priority (ascending). Cannot be combined with --sort-by-date.");
+
+
+    OptionGroup bindingGroup = new OptionGroup(true);
+    bindingGroup.addOption(addTodoOption, todoTextOption);
+
+    OptionGroup exclusiveGroup = new OptionGroup(false);
+    exclusiveGroup.addOption(sortByDateOption, sortByPriorityOption);
 
     Option csvFileOption = new Option("csv-file", true, true, "--csv-file <path/to/folder> "
         + "The CSV file containing the todos. This option is required.");
 
-    options.addOptionGroup(group);
+    options.addOptionGroup(bindingGroup);
+    options.addOptionGroup(exclusiveGroup);
     options.addOption(csvFileOption);
 
     HelpFormatter formatter = new HelpFormatter();
@@ -41,19 +46,16 @@ public class Main {
         + "--letter --letter-template letter-template.txt --output-dir letters"
         + "--csv-file customer.csv";
     formatter.setExamples(examples);
-
+    /*
     try {
       commandLine = commandLineParser.parse(options, args);
 //      System.out.println(commandLine);
-
 
       IOBridge io = new IOBridge(commandLine);
       io.processTodos();
     } catch (ParseException | java.text.ParseException | TodoNotFoundException e) {
       System.out.println("Error! " + e.getMessage());
       formatter.printHelp(options);
-    }
-
+    }*/
   }
-
 }

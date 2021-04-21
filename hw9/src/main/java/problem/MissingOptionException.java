@@ -5,16 +5,8 @@ import java.util.List;
 
 public class MissingOptionException extends ParseException {
 
-  public MissingOptionException(String message) {
-    super(message);
-  }
-
   public MissingOptionException(List<String> missingOptions) {
-    this(createMessage(missingOptions));
-  }
-
-  public MissingOptionException(OptionGroup group) {
-    this(createMessage(group));
+    super(createMessage(missingOptions));
   }
 
   /**

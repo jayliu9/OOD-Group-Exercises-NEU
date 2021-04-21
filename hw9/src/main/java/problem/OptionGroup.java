@@ -1,27 +1,32 @@
 package problem;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * An OptionGroup class, consisting of a map of keyOptions and corresponding valueOptions.
- * If one keyOption is provided, its corresponding valueOption must be provided.
- */
 public class OptionGroup {
 
-  private Map<Option, List<Option>> optionGroup = new HashMap<>();
+  private boolean binding;
+  private Map<Option, Option> optionGroup;
+
+  public OptionGroup(boolean binding) {
+    this.binding = binding;
+    this.optionGroup = new HashMap<>();
+  }
+
+  public boolean isBinding() {
+    return this.binding;
+  }
 
   /**
    * Adds a pair of options to the the option Group.
    * @param optionA The keyOption.
    * @param optionB The corresponding valueOption.
    */
-  public void addOption(Option optionA, List<Option> optionB) {
+  public void addOption(Option optionA, Option optionB) {
     this.optionGroup.put(optionA, optionB);
   }
 
@@ -31,11 +36,9 @@ public class OptionGroup {
    */
   public List<Option> getAllOptions() {
     List<Option> allOptions = new ArrayList<>();
-    for (Map.Entry<Option, List<Option>> entry : optionGroup.entrySet()) {
+    for (Map.Entry<Option, Option> entry : optionGroup.entrySet()) {
       allOptions.add(entry.getKey());
-      for (Option opt : entry.getValue()) {
-        allOptions.add(opt);
-      }
+      allOptions.add(entry.getValue());
     }
     return allOptions;
   }
@@ -54,22 +57,42 @@ public class OptionGroup {
     return false;
   }
 
-//  /**
-//   * Gets the corresponding valueOption according to the given keyOption.
-//   * @param keyOption the given keyOption.
-//   * @return the corresponding valueOption.
-//   */
-//  public Option getValueOption(Option keyOption) {
-//    return this.optionGroup.get(keyOption);
-//  }
+  /**
+   * Checks whether or not the valueOption set contains the specified option.
+   * @param option The specified option.
+   * @return true if the valueOption set contains the specified option; false otherwise.
+   */
+  public boolean containsValueOption(String option) {
+    for (Option opt : this.optionGroup.values()) {
+      if (opt.getOpt().equals(option)) {
+        return true;
+      }
+    }
+    return false;
+  }
 
+  /**
+   * Gets the corresponding keyOption according to the given valueOption.
+   * @param valueOption the given valueOption.
+   * @return the corresponding valueOption.
+   */
   public Option getKeyOption(Option valueOption) {
-    for (Option keyOption : this.optionGroup.keySet()) {
-      if (this.optionGroup.get(keyOption).contains(valueOption)) {
-        return keyOption;
+    for (Option opt : this.optionGroup.keySet()) {
+      if (valueOption.equals(this.getValueOption(opt))) {
+        return opt;
       }
     }
     return null;
+  }
+
+
+  /**
+   * Gets the corresponding valueOption according to the given keyOption.
+   * @param keyOption the given keyOption.
+   * @return the corresponding valueOption.
+   */
+  public Option getValueOption(Option keyOption) {
+    return this.optionGroup.get(keyOption);
   }
 
   /**
@@ -79,12 +102,6 @@ public class OptionGroup {
   public Set<Option> getAllKeyOptions() {
     return this.optionGroup.keySet();
   }
-
-
-  public boolean containsValueOptions(Option valueOption) {
-    return this.optionGroup.values().contains(valueOption);
-  }
-
 
   /**
    * Returns a List that contains all the keyOptions' name.

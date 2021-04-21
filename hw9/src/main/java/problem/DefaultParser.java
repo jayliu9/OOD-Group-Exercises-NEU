@@ -21,7 +21,8 @@ public class DefaultParser implements CommandLineParser {
    *                        tokens.
    */
   @Override
-  public CommandLine parse(Options options, String[] arguments) throws ParseException {
+  public CommandLine parse(Options options, String[] arguments)
+      throws ParseException {
     this.options = options;
     this.currentOption = null;
     this.expectedOpts = options.getRequiredOptions();
@@ -68,7 +69,7 @@ public class DefaultParser implements CommandLineParser {
   private void checkOptionValue() throws MissingArgumentException {
     for (Option option : cmd.getOptions()) {
       if (option.acceptsArg() && option.getArgName() == null) {
-        throw new MissingArgumentException("Missing value of option: " + option.getOpt() + "\n");
+        throw new MissingArgumentException(option);
       }
     }
   }
@@ -78,52 +79,32 @@ public class DefaultParser implements CommandLineParser {
    *
    * @throws MissingBindingOptionException if a keyOption in one group in the options is provided
    *                                       but its corresponding valueOption is not.
-   * @throws MissingOptionException        if all keyOptions in one group in the options are not
-   *                                       provided.
+   * @throws MutexOptionException        if a keyOption in one group in the options is provided
+   *                                      and its corresponding valueOption is also provided.
    */
-  private void checkGroup() throws MissingBindingOptionException, MissingOptionException {
-//    for (Option option : this.cmd.getOptions()) {
-//      for (OptionGroup group : this.options.getOptionGroups()) {
-//        String optionName = option.getOpt();
-//        Option bindingOption = group.getValueOption(option);
-//        if (group.containsKeyOption(optionName) && !this.cmd.hasOption(bindingOption.getOpt())) {
-//          throw new MissingBindingOptionException(option, bindingOption);
-//        }
-//
-//        //Checks whether or not this commandline contains at least one keyOption in one OptionGroup in the options.
-//        if (!this.containsGroupKeyOption(group)) {
-//          throw new MissingOptionException(group);
-//        }
-//      }
-//    }
+  private void checkGroup()
+      throws MissingBindingOptionException, MutexOptionException {
     for (Option option : this.cmd.getOptions()) {
       for (OptionGroup group : this.options.getOptionGroups()) {
-        if (group.containsValueOptions(option)) {
-          Option keyOption = group.getKeyOption(option);
-          if (!this.cmd.hasOption(keyOption.getOpt())) {
-            throw new MissingBindingOptionException(option, keyOption);
+        String optionName = option.getOpt();
+        Option valueOption = group.getValueOption(option);
+        Option keyOption = group.getKeyOption(option);
+
+        if (group.isBinding()) {
+          if (group.containsKeyOption(optionName) && !this.cmd.hasOption(valueOption.getOpt())) {
+            throw new MissingBindingOptionException(option, valueOption);
+          }
+        } else {
+          if (group.containsKeyOption(optionName) && this.cmd.hasOption(valueOption.getOpt())) {
+            throw new MutexOptionException(option, valueOption);
+          } else if (group.containsValueOption(optionName) && this.cmd.hasOption(keyOption.getOpt())) {
+            throw new MutexOptionException(option, keyOption);
           }
         }
       }
     }
   }
 
-  /**
-   * Checks whether or not this commandline contains at least one keyOption in the given
-   * OptionGroup.
-   *
-   * @param group the given OptionGroup
-   * @return true if this commandline contains at least one keyOption in the given OptionGroup;
-   * false otherwise.
-   */
-  private boolean containsGroupKeyOption(OptionGroup group) {
-    for (Option keyOption : group.getAllKeyOptions()) {
-      if (this.cmd.getOptions().contains(keyOption)) {
-        return true;
-      }
-    }
-    return false;
-  }
 
   /**
    * Throws a MissingOptionException if all of the required options are not present.

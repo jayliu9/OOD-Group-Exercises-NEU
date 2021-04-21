@@ -2,12 +2,7 @@ package problem;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import problem.ToDo.Builder;
+import java.util.*;
 
 /**
  * This class stores information from csv file, including headers and todolist
@@ -15,12 +10,13 @@ import problem.ToDo.Builder;
 public class ToDos {
 
   private static final String SPLIT_REGEX = "\",\"";
+  private static final String HEADER = "\"id\", \"text\", \"completed\", \"due\", \"priority\", \"category\"";
 
   private String headers;
   private List<ToDo> todoList;
 
   public ToDos() {
-    this.headers = null;
+    this.headers = HEADER;
     this.todoList = new ArrayList<>();
   }
 
@@ -43,16 +39,8 @@ public class ToDos {
    * Adds a ToDo instance to ToDos list
    * @param todo
    */
-  public void add(ToDo todo){
+  public void addTodo(ToDo todo){
     this.todoList.add(todo);
-  }
-
-  public void setHeaders(String headers) {
-    this.headers = headers;
-  }
-
-  public String getHeaders() {
-    return this.headers;
   }
 
   /**
@@ -64,14 +52,52 @@ public class ToDos {
     String trimmed = this.trimHeadTail(info);
     String[] split = trimmed.split(SPLIT_REGEX);
     List<String> row = Arrays.asList(split);
+
+    // decode csv todo list(A String) to valid field value for ToDo builder
+    String text = row.get(1);
+    Integer id = idFormatter(row.get(0));
+    Date date = dateFormatter(row.get(3));
+    Integer priority = priorityFormatter(row.get(4));
+    Boolean complete = completeFormatter(row.get(2));
+    String category = categoryFormatter(row.get(5));
+
+    return new ToDo.Builder(text)
+        .setID(id)
+        .setCompleted(complete)
+        .addDue(date)
+        .addPriority(priority)
+        .addCategory(category).build();
+  }
+
+
+  private Integer idFormatter(String s) {
+    return Integer.parseInt(s);
+  }
+
+  private Date dateFormatter(String s) throws ParseException {
+    if (s.equals("?")) {
+      return null;
+    }
+    Date date;
     SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    Date date = sdf.parse(row.get(3));
-    return new ToDo.Builder(row.get(1)).
-            setID(row.get(0))
-            .setCompleted(Boolean.getBoolean(row.get(2)))
-            .addDue(date)
-            .addPriority(Integer.parseInt(row.get(4)))
-            .addCategory(row.get(5)).build();
+    date = sdf.parse(s);
+    return date;
+  }
+
+  private Integer priorityFormatter(String s) {
+      return Integer.parseInt(s);
+  }
+
+  private Boolean completeFormatter(String s) {
+    return Boolean.parseBoolean(s);
+  }
+
+  private String categoryFormatter(String s) {
+    if (s.equals("?")) {
+      return null;
+    } else {
+      return s;
+    }
   }
 
   private String trimHeadTail(String s) {
@@ -88,10 +114,22 @@ public class ToDos {
     todoInfo.append("\"").append(toDo.getID()).append("\",");
     todoInfo.append("\"").append(toDo.getText()).append("\",");
     todoInfo.append("\"").append(toDo.getCompleted()).append("\",");
-    SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
-    todoInfo.append("\"").append(sdf.format(toDo.getDue())).append("\",");
+
+    if (toDo.getDue() == null) {
+      todoInfo.append("\"").append("?").append("\",");
+    } else {
+      SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+      todoInfo.append("\"").append(sdf.format(toDo.getDue())).append("\",");
+    }
+
     todoInfo.append("\"").append(toDo.getPriority()).append("\",");
-    todoInfo.append("\"").append(toDo.getCategory()).append("\"");
+
+    if (toDo.getCategory() == null) {
+      todoInfo.append("\"").append("?").append("\"");
+    } else {
+      todoInfo.append("\"").append(toDo.getCategory()).append("\"");
+    }
+
     return todoInfo.toString();
   }
 
@@ -103,12 +141,25 @@ public class ToDos {
     return msg;
   }
 
-  public ToDo findToDo(String iD) throws TodoNotFoundException {
+  public ToDo findToDo(int iD) throws TodoNotFoundException {
     for (ToDo toDo : this.todoList) {
-      if (toDo.getID().equals(iD))
+      if (toDo.getID() == iD)
         return toDo;
     }
-    throw new TodoNotFoundException(iD + " is not existing!");
+    throw new TodoNotFoundException("ToDo" + iD + " not exists!");
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ToDos toDos = (ToDos) o;
+    return this.headers.equals(toDos.headers) && this.todoList.equals(toDos.todoList);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(this.headers, this.todoList);
   }
 }
 

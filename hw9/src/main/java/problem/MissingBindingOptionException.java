@@ -2,13 +2,8 @@ package problem;
 
 public class MissingBindingOptionException extends ParseException {
 
-  public MissingBindingOptionException(String message)
-  {
-    super(message);
-  }
-
   public MissingBindingOptionException(Option givenOption, Option missingOption) {
-    this(createMessage(givenOption, missingOption));
+    super(createMessage(givenOption, missingOption));
   }
 
   private static String createMessage(Option givenOption, Option missingOption) {
