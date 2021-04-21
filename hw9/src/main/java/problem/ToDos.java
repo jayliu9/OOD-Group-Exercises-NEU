@@ -71,7 +71,7 @@ public class ToDos {
 
 
   private Integer idFormatter(String s) {
-    return Integer.parseInt(s);
+    return Integer.valueOf(s);
   }
 
   private Date dateFormatter(String s) throws ParseException {
@@ -85,7 +85,10 @@ public class ToDos {
   }
 
   private Integer priorityFormatter(String s) {
-      return Integer.parseInt(s);
+    if (s.equals("?")) {
+      return null;
+    }
+    return Integer.valueOf(s);
   }
 
   private Boolean completeFormatter(String s) {
@@ -95,9 +98,8 @@ public class ToDos {
   private String categoryFormatter(String s) {
     if (s.equals("?")) {
       return null;
-    } else {
-      return s;
     }
+    return s;
   }
 
   private String trimHeadTail(String s) {
@@ -122,7 +124,11 @@ public class ToDos {
       todoInfo.append("\"").append(sdf.format(toDo.getDue())).append("\",");
     }
 
-    todoInfo.append("\"").append(toDo.getPriority()).append("\",");
+    if (toDo.getPriority() == null) {
+      todoInfo.append("\"").append("?").append("\",");
+    } else {
+      todoInfo.append("\"").append(toDo.getPriority()).append("\",");
+    }
 
     if (toDo.getCategory() == null) {
       todoInfo.append("\"").append("?").append("\"");
@@ -141,7 +147,7 @@ public class ToDos {
     return msg;
   }
 
-  public ToDo findToDo(int iD) throws TodoNotFoundException {
+  public ToDo findToDo(Integer iD) throws TodoNotFoundException {
     for (ToDo toDo : this.todoList) {
       if (toDo.getID() == iD)
         return toDo;
@@ -154,12 +160,12 @@ public class ToDos {
     if (this == o) return true;
     if (o == null || getClass() != o.getClass()) return false;
     ToDos toDos = (ToDos) o;
-    return this.headers.equals(toDos.headers) && this.todoList.equals(toDos.todoList);
+    return this.todoList.equals(toDos.todoList);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.headers, this.todoList);
+    return Objects.hash(this.todoList);
   }
 }
 

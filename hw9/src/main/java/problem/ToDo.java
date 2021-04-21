@@ -5,11 +5,11 @@ import java.util.Objects;
 
 public class ToDo implements Comparable<ToDo>{
 
-  private int ID;
+  private Integer ID;
   private String text; // The only required parameter
-  private boolean completed; // Default false
+  private Boolean completed; // Default false
   private Date due;
-  private int priority; // Default 3
+  private Integer priority; // Default 3
   private String category;
 
   private ToDo(Builder builder) {
@@ -20,7 +20,7 @@ public class ToDo implements Comparable<ToDo>{
     this.priority = builder.priority;
     this.category = builder.category;
   }
-  public int getID() {
+  public Integer getID() {
     return this.ID;
   }
 
@@ -28,19 +28,15 @@ public class ToDo implements Comparable<ToDo>{
     return this.text;
   }
 
-  public boolean getCompleted() {
+  public Boolean getCompleted() {
     return this.completed;
-  }
-
-  public boolean isCompleted() {
-    return this.completed == true;
   }
 
   public Date getDue() {
     return this.due;
   }
 
-  public int getPriority() {
+  public Integer getPriority() {
     return this.priority;
   }
 
@@ -60,25 +56,23 @@ public class ToDo implements Comparable<ToDo>{
   public static class Builder {
 
     private String text; // The only required parameter
-    private boolean completed; // Default false
+    private Boolean completed; // Default false
     private Date due;
-    private int priority; // Default is 4
+    private Integer priority; // Default is 4
     private String category;
-    private int ID;
-    private static final int LOWEST_PRIORITY = 4;
+    private Integer ID;
 
     public Builder(String text) {
       this.text = text;
       this.completed = false;
-      this.priority = LOWEST_PRIORITY;
     }
 
-    public Builder setID(int ID) {
+    public Builder setID(Integer ID) {
       this.ID = ID;
       return this;
     }
 
-    public Builder setCompleted(boolean completed) {
+    public Builder setCompleted(Boolean completed) {
       this.completed = completed;
       return this;
     }
@@ -88,7 +82,7 @@ public class ToDo implements Comparable<ToDo>{
       return this;
     }
 
-    public Builder addPriority(int priority) {
+    public Builder addPriority(Integer priority) {
       this.priority = priority;
       return this;
     }
@@ -118,16 +112,20 @@ public class ToDo implements Comparable<ToDo>{
 
   @Override
   public boolean equals(Object o) {
-    if (this == o) return true;
-    if (o == null || getClass() != o.getClass()) return false;
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
     ToDo toDo = (ToDo) o;
-    return this.ID == toDo.ID && this.completed == toDo.completed && this.priority == toDo.priority &&
-            this.text.equals(toDo.text) && Objects.equals(this.due, toDo.due) &&
-            Objects.equals(this.category, toDo.category);
+    return ID.equals(toDo.ID) && text.equals(toDo.text) && completed.equals(toDo.completed)
+        && Objects.equals(due, toDo.due) && Objects
+        .equals(priority, toDo.priority) && Objects.equals(category, toDo.category);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(this.ID, this.text, this.completed, this.due, this.priority, this.category);
+    return Objects.hash(ID, text, completed, due, priority, category);
   }
 }
