@@ -13,12 +13,8 @@ public class HelpFormatter {
   public static final String DEFAULT_EXAMPLE_PREFIX = "EXAMPLE: ";
   public static final String DEFAULT_SEPARATOR = "\n";
 
-  protected  String examples;
-  protected  StringBuilder msg;
-
-  public HelpFormatter() {
-    // do nothing
-  }
+  protected String examples;
+  protected StringBuilder msg;
 
   /**
    * set examples of the usage
