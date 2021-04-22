@@ -17,12 +17,21 @@ public class ToDosTest {
   ToDos toDos;
   String toDo1;
   ToDos nullType;
+  ToDos diffList;
+  ToDos same;
 
   @Before
   public void setUp() throws Exception {
     toDo1 = "\"2\",\"Mail passport\",\"false\",\"02/28/2020\",\"1\",\"?\"";
     toDos = new ToDos();
     toDos.readTodo(toDo1);
+
+    same = new ToDos();
+    same.readTodo(toDo1);
+    nullType = null;
+    String diff = "\"3\",\"Study for finals\",\"false\",\"03/22/2020\",\"2\",\"school\"";
+    diffList = new ToDos();
+    diffList.readTodo(diff);
   }
 
   @Test
@@ -72,4 +81,17 @@ public class ToDosTest {
     toDos.findToDo(1);
   }
 
+  @Test
+  public void testEquals() {
+    assertTrue(toDos.equals(toDos));
+    assertTrue(toDos.equals(same));
+    assertFalse(toDos.equals(diffList));
+    assertFalse(toDos.equals(toDo1));
+    assertFalse(toDos.equals(nullType));
+  }
+
+  @Test
+  public void testHashCode() {
+    assertTrue(toDos.hashCode() == same.hashCode());
+  }
 }

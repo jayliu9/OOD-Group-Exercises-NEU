@@ -3,7 +3,7 @@ package problem;
 import java.util.Date;
 import java.util.Objects;
 
-public class ToDo implements Comparable<ToDo>{
+public class ToDo {
 
   private Integer ID;
   private String text; // The only required parameter
@@ -48,10 +48,6 @@ public class ToDo implements Comparable<ToDo>{
     this.completed = completed;
   }
 
-  @Override
-  public int compareTo(ToDo o) {
-    return 0;
-  }
 
   public static class Builder {
 
