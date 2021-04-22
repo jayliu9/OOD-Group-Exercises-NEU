@@ -140,16 +140,16 @@ public class ToDos {
   }
 
   public String generateMsg() {
-    String msg = this.headers + System.lineSeparator();
+    StringBuilder msg = new StringBuilder(this.headers + System.lineSeparator());
     for (ToDo todo : this.todoList) {
-      msg += this.outputFormatter(todo) + System.lineSeparator();
+      msg.append(this.outputFormatter(todo)).append(System.lineSeparator());
     }
-    return msg;
+    return msg.toString();
   }
 
   public ToDo findToDo(Integer iD) throws TodoNotFoundException {
     for (ToDo toDo : this.todoList) {
-      if (toDo.getID() == iD)
+      if (toDo.getID().equals(iD))
         return toDo;
     }
     throw new TodoNotFoundException("ToDo" + iD + " not exists!");
@@ -168,4 +168,3 @@ public class ToDos {
     return Objects.hash(this.todoList);
   }
 }
-

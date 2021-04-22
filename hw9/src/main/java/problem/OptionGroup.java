@@ -85,7 +85,6 @@ public class OptionGroup {
     return null;
   }
 
-
   /**
    * Gets the corresponding valueOption according to the given keyOption.
    * @param keyOption the given keyOption.
@@ -93,26 +92,6 @@ public class OptionGroup {
    */
   public Option getValueOption(Option keyOption) {
     return this.optionGroup.get(keyOption);
-  }
-
-  /**
-   * Returns a set that contains all the keyOptions.
-   * @return a set that contains all the keyOptions.
-   */
-  public Set<Option> getAllKeyOptions() {
-    return this.optionGroup.keySet();
-  }
-
-  /**
-   * Returns a List that contains all the keyOptions' name.
-   * @return a List that contains all the keyOptions' name.
-   */
-  public List<String> getAllKeyOptionsNames() {
-    List<String> keyOptionsNames = new ArrayList<>();
-    for (Option option : this.optionGroup.keySet()) {
-      keyOptionsNames.add(option.getOpt());
-    }
-    return keyOptionsNames;
   }
 
   /**
@@ -129,8 +108,10 @@ public class OptionGroup {
       return false;
     }
     OptionGroup group = (OptionGroup) o;
-    return Objects.equals(optionGroup, group.optionGroup);
+    return binding == group.binding && Objects.equals(optionGroup, group.optionGroup);
   }
+
+
 
   /**
    * Gets a hash code value for the object.
@@ -138,7 +119,7 @@ public class OptionGroup {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(optionGroup);
+    return Objects.hash(binding, optionGroup);
   }
 
   /**
@@ -148,7 +129,8 @@ public class OptionGroup {
   @Override
   public String toString() {
     return "OptionGroup{" +
-        "optionGroup=" + optionGroup +
+        "binding=" + binding +
+        ", optionGroup=" + optionGroup +
         '}';
   }
 }

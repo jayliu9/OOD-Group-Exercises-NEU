@@ -79,8 +79,8 @@ public class DefaultParser implements CommandLineParser {
    *
    * @throws MissingBindingOptionException if a keyOption in one group in the options is provided
    *                                       but its corresponding valueOption is not.
-   * @throws MutexOptionException        if a keyOption in one group in the options is provided
-   *                                      and its corresponding valueOption is also provided.
+   * @throws MutexOptionException          if a keyOption in one group in the options is provided
+   *                                       and its corresponding valueOption is also provided.
    */
   private void checkGroup()
       throws MissingBindingOptionException, MutexOptionException {
@@ -97,14 +97,23 @@ public class DefaultParser implements CommandLineParser {
         } else {
           if (group.containsKeyOption(optionName) && this.cmd.hasOption(valueOption.getOpt())) {
             throw new MutexOptionException(option, valueOption);
-          } else if (group.containsValueOption(optionName) && this.cmd.hasOption(keyOption.getOpt())) {
+          } else if (group.containsValueOption(optionName) && this.cmd
+              .hasOption(keyOption.getOpt())) {
             throw new MutexOptionException(option, keyOption);
+          }
+        }
+      }
+
+      for (OptionSeries series : this.options.getOptionSeries()) {
+        if (series.containsValueOption(option)) {
+          Option keyOption = series.getKeyOption(option);
+          if (!this.cmd.hasOption(keyOption.getOpt())) {
+            throw new MissingBindingOptionException(option, keyOption);
           }
         }
       }
     }
   }
-
 
   /**
    * Throws a MissingOptionException if all of the required options are not present.

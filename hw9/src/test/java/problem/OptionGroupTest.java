@@ -1,6 +1,8 @@
 package problem;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,100 +14,107 @@ import org.junit.Test;
 
 public class OptionGroupTest {
 
-  private Option emailOption;
-  private Option emailTemplateOption;
-  private Option letterOption;
-  private Option letterTemplateOption;
-  private OptionGroup optionGroup;
+  private Option addTodoOption;
+  private Option todoTextOption;
+  private OptionGroup bindingOptionGroup;
+  private OptionGroup exclusiveOptionGroup;
   private OptionGroup nullType;
 
   @Before
   public void setUp() throws Exception {
-    emailOption = new Option("email", false, false, "Generate email messages.");
-    emailTemplateOption = new Option("email-template", true, false, "email template.");
-    letterOption = new Option("letter", false, false, "Generate letter messages.");
-    letterTemplateOption = new Option("letter-template", true, false, "letter template.");
+    addTodoOption = new Option("add-todo", false, false, "--add-todo Add a new todo. "
+        + "If this option is provided, then --todo-text must also be provided.");
 
-    optionGroup = new OptionGroup(true);
+    todoTextOption = new Option("todo-text", true, false,
+        "--todo-text <description of todo> "
+            + "A description of the todo.");
+
+    bindingOptionGroup = new OptionGroup(true);
+
+    exclusiveOptionGroup = new OptionGroup(false);
+
     nullType = null;
+  }
 
-    optionGroup.addOption(emailOption, emailTemplateOption);
-    optionGroup.addOption(letterOption, letterTemplateOption);
+  @Test
+  public void isBinding() {
+    assertTrue(bindingOptionGroup.isBinding());
+    assertFalse(exclusiveOptionGroup.isBinding());
   }
 
   @Test
   public void addOption() {
-    optionGroup.addOption(emailOption, emailTemplateOption);
-    optionGroup.addOption(letterOption, letterTemplateOption);
-    assertEquals(emailTemplateOption, optionGroup.getValueOption(emailOption));
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
+    assertEquals(todoTextOption, bindingOptionGroup.getValueOption(addTodoOption));
   }
 
   @Test
   public void getAllOptions() {
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
     List<Option> allOptions = new ArrayList<>();
-    allOptions.add(emailOption);
-    allOptions.add(emailTemplateOption);
-    allOptions.add(letterOption);
-    allOptions.add(letterTemplateOption);
-    assertEquals(allOptions, optionGroup.getAllOptions());
+    allOptions.add(addTodoOption);
+    allOptions.add(todoTextOption);
+    assertEquals(allOptions, bindingOptionGroup.getAllOptions());
   }
 
   @Test
   public void containsKeyOption() {
-    assertTrue(optionGroup.containsKeyOption("email"));
-    assertTrue(optionGroup.containsKeyOption("letter"));
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
+    assertTrue(bindingOptionGroup.containsKeyOption("add-todo"));
+  }
+
+  @Test
+  public void containsValueOption() {
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
+    assertTrue(bindingOptionGroup.containsValueOption("todo-text"));
+  }
+
+  @Test
+  public void getKeyOption() {
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
+    assertEquals(addTodoOption, bindingOptionGroup.getKeyOption(todoTextOption));
   }
 
   @Test
   public void getValueOption() {
-    assertEquals(letterTemplateOption, optionGroup.getValueOption(letterOption));
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
+    assertEquals(todoTextOption, bindingOptionGroup.getValueOption(addTodoOption));
   }
-
-  @Test
-  public void getAllKeyOptions() {
-    Set<Option> allKeyOptions = new HashSet<>();
-    allKeyOptions.add(emailOption);
-    allKeyOptions.add(letterOption);
-    assertEquals(allKeyOptions, optionGroup.getAllKeyOptions());
-
-  }
-
-  @Test
-  public void getAllKeyOptionsNames() {
-    List<String> allKeyOptionsNames = new ArrayList<>(Arrays.asList("email", "letter"));
-    assertEquals(allKeyOptionsNames, optionGroup.getAllKeyOptionsNames());
-  }
-
 
   @Test
   public void testEquals() {
-    assertTrue(optionGroup.equals(optionGroup));
-    assertFalse(optionGroup.equals(nullType));
-    assertFalse(optionGroup.equals(""));
+    assertFalse(bindingOptionGroup.equals(exclusiveOptionGroup));
+
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
+    exclusiveOptionGroup.addOption(addTodoOption, todoTextOption);
+
+    assertTrue(bindingOptionGroup.equals(bindingOptionGroup));
+    assertFalse(bindingOptionGroup.equals(nullType));
+    assertFalse(bindingOptionGroup.equals(""));
 
     OptionGroup that = new OptionGroup(true);
-    that.addOption(emailOption, emailTemplateOption);
-    that.addOption(letterOption, letterTemplateOption);
-    assertTrue(optionGroup.equals(that));
+    that.addOption(addTodoOption, todoTextOption);
+    assertTrue(bindingOptionGroup.equals(that));
+
+    assertFalse(bindingOptionGroup.equals(exclusiveOptionGroup));
   }
 
   @Test
   public void testHashCode() {
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
     OptionGroup that = new OptionGroup(true);
-    that.addOption(emailOption, emailTemplateOption);
-    that.addOption(letterOption, letterTemplateOption);
-    assertTrue(optionGroup.hashCode() == that.hashCode());
+    that.addOption(addTodoOption, todoTextOption);
+    assertTrue(bindingOptionGroup.hashCode() == that.hashCode());
   }
 
   @Test
   public void testToString() {
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
     String expected = "OptionGroup{"
+        + "binding=true, "
         + "optionGroup={"
-        + "Option{opt='email', value='null', required=false, description='Generate email messages.', hasArg=false}"
-        + "=Option{opt='email-template', value='null', required=false, description='email template.', hasArg=true}, "
-        + "Option{opt='letter', value='null', required=false, description='Generate letter messages.', hasArg=false}"
-        + "=Option{opt='letter-template', value='null', required=false, description='letter template.', hasArg=true}}}";
-    assertEquals(expected, optionGroup.toString());
+        + "Option{opt='add-todo', value='null', required=false, description='--add-todo Add a new todo. If this option is provided, then --todo-text must also be provided.', hasArg=false}"
+        + "=Option{opt='todo-text', value='null', required=false, description='--todo-text <description of todo> A description of the todo.', hasArg=true}}}";
+    assertEquals(expected, bindingOptionGroup.toString());
   }
 }
-

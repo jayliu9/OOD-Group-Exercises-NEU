@@ -2,162 +2,216 @@ package problem;
 
 import static org.junit.Assert.*;
 
-import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import org.junit.Before;
 import org.junit.Test;
 
 public class OptionsTest {
-  private Option op1;
-  private Option op11;
-  private Option op2;
-  private Option op22;
-  private Option op3;
-  private Option op4;
-  private OptionGroup optionGroup;
 
+  private Option csvFileOption;
+  private Option addTodoOption;
+  private Option todoTextOption;
+  private Option completedOption;
+  private Option dueOption;
+  private Option priorityOption;
+  private Option categoryOption;
+  private Option completeTodoOption;
+  private Option displayOption;
+  private Option showIncompleteOption;
+  private Option showCategoryOption;
+  private Option sortByDateOption;
+  private Option sortByPriorityOption;
+  private OptionGroup bindingOptionGroup;
+  private OptionGroup exclusiveOptionGroup;
+  private OptionSeries optionSeries;
   private Options options;
   private Options nullType;
 
   @Before
   public void setUp() throws Exception {
-    op1 = new Option("email", false, false, "Generate email messages.");
-    op11 = new Option("email-template", true, false, "email template.");
-    op2 = new Option("letter", false, false, "Generate letter messages.");
-    op22 = new Option("letter-template", true, false, "letter template.");
-    op3 = new Option("output-dir", true, true, "set output dir.");
-    op4 = new Option("csv-file", true, true, "set csv file.");
+    csvFileOption = new Option("csv-file", true, true, "--csv-file <path/to/folder> "
+        + "The CSV file containing the todos. This option is required.");
 
-    optionGroup = new OptionGroup(true);
-    optionGroup.addOption(op1, op11);
-    optionGroup.addOption(op2, op22);
+    addTodoOption = new Option("add-todo", false, false, "--add-todo Add a new todo. "
+        + "If this option is provided, then --todo-text must also be provided.");
+
+    todoTextOption = new Option("todo-text", true, false,
+        "--todo-text <description of todo> "
+            + "A description of the todo.");
+
+    completedOption = new Option("completed", false, false,
+        "--completed (Optional) Sets the completed status of a new todo to true.");
+
+    dueOption = new Option("due", true, false,
+        "--due <due date> (Optional) Sets the due date of a new todo. You may choose how the date should be formatted.");
+
+    priorityOption = new Option("priority", true, false,
+        "--priority <1, 2, or 3> (Optional) Sets the priority of a new todo. The value can be 1, 2, or 3.");
+
+    categoryOption = new Option("category", true, false,
+        "--category <a category name> (Optional) Sets the category of a new todo. The value can be any String. Categories do not need to be pre-defined.");
+
+    completeTodoOption = new Option("complete-todo", true, false,
+        "--complete-todo <id> Mark the Todo with the provided ID as complete.");
+
+    displayOption = new Option("display", false, false,
+        "--display Display todos. If none of the following optional arguments are provided, displays all todos.");
+
+    showIncompleteOption = new Option("show-incomplete", false, false,
+        "--show-incomplete (Optional) If --display is provided, only incomplete todos should be displayed.");
+
+    showCategoryOption = new Option("show-category", true, false,
+        "--show-category <category> (Optional) If --display is provided, only todos with the given category should be displayed.");
+
+    sortByDateOption = new Option("sort-by-date", false, false,
+        "--sort-by-date (Optional) If --display is provided, sort the list of todos by date order (ascending). be combined with --sort-by-priority.");
+
+    sortByPriorityOption = new Option("sort-by-priority", false, false,
+        "--sort-by-priority (Optional) If --display is provided, sort the list of todos by priority (ascending). Cannot be combined with --sort-by-date.");
+
+    bindingOptionGroup = new OptionGroup(true);
+    bindingOptionGroup.addOption(addTodoOption, todoTextOption);
+
+    exclusiveOptionGroup = new OptionGroup(false);
+    exclusiveOptionGroup.addOption(sortByDateOption, sortByPriorityOption);
+
+    optionSeries = new OptionSeries();
+    optionSeries.addOption(addTodoOption,
+        Arrays.asList(todoTextOption, completedOption, dueOption, priorityOption, categoryOption));
+    optionSeries.addOption(displayOption, Arrays
+        .asList(showIncompleteOption, showCategoryOption, sortByDateOption, sortByPriorityOption));
 
     options = new Options();
+
+    options.addOptionGroup(bindingOptionGroup);
+    options.addOptionGroup(exclusiveOptionGroup);
+    options.addOptionSeries(optionSeries);
+
     nullType = null;
   }
 
   @Test
   public void getOptions() {
-    options.addOptionGroup(optionGroup);
-    options.addOption(op3);
-    options.addOption(op4);
-
-    List<Option> optList = new ArrayList<>();
-    optList.add(op1);
-    optList.add(op11);
-    optList.add(op2);
-    optList.add(op22);
-    optList.add(op3);
-    optList.add(op4);
-
-    assertEquals(optList, options.getOptions());
+    assertEquals(11, options.getOptions().size());
   }
 
-  @Test
-  public void addOptionGroup() {
-    options.addOptionGroup(optionGroup);
-    Set<OptionGroup> optionSet = new HashSet<>();
-    optionSet.add(optionGroup);
-    assertEquals(optionSet, options.getOptionGroups());
-  }
+//  @Test
+//  public void addOptionGroup() {
+//
+//  }
+//
+//  @Test
+//  public void addOptionSeries() {
+//  }
 
   @Test
   public void addOption() {
-    options.addOption(op3);
-    options.addOption(op4);
-    options.addOption(op4);
-    assertEquals(op3, options.getOption("output-dir"));
+    options.addOption(csvFileOption);
+    options.addOption(csvFileOption);
+    assertEquals(csvFileOption, options.getOption("csv-file"));
   }
 
   @Test
   public void getRequiredOptions() {
-    options.addOptionGroup(optionGroup);
-    options.addOption(op3);
-    options.addOption(op4);
-
-    List<Object> optList = new ArrayList<>();
-    optList.add("output-dir");
-    optList.add("csv-file");
-
-    assertEquals(optList, options.getRequiredOptions());
-  }
-
-  @Test
-  public void getMatchingOptions() {
-    options.addOption(op3);
-    options.addOption(op4);
-    assertEquals(op3, options.getMatchingOption("--output-dir"));
-    assertEquals(null, options.getMatchingOption("--email"));
+    options.addOption(csvFileOption);
+    assertEquals(Collections.singletonList("csv-file"), options.getRequiredOptions());
   }
 
   @Test
   public void getOption() {
-    options.addOptionGroup(optionGroup);
-    assertEquals(op1, options.getOption("email"));
-    assertEquals(null, options.getOption("jimmy"));
+    assertEquals(addTodoOption, options.getOption("add-todo"));
+    assertNull(options.getOption("csv-file"));
   }
 
+  @Test
+  public void getOptionGroups() {
+    Set<OptionGroup> optionSet = new HashSet<>();
+    optionSet.add(bindingOptionGroup);
+    optionSet.add(exclusiveOptionGroup);
+    assertEquals(optionSet, options.getOptionGroups());
+  }
+
+  @Test
+  public void getOptionSeries() {
+    Set<OptionSeries> optionSet = new HashSet<>();
+    optionSet.add(optionSeries);
+    assertEquals(optionSet, options.getOptionSeries());
+  }
+
+  @Test
+  public void getMatchingOption() {
+    assertEquals(showCategoryOption, options.getMatchingOption("--show-category"));
+    assertEquals(null, options.getMatchingOption("show-category"));
+  }
 
   @Test
   public void testEquals() {
-    options.addOption(op1);
     assertTrue(options.equals(options));
     assertFalse(options.equals(nullType));
     assertFalse(options.equals(""));
 
     Options that = new Options();
-    that.addOption(op1);
+    that.addOptionGroup(bindingOptionGroup);
+    that.addOptionGroup(exclusiveOptionGroup);
+    that.addOptionSeries(optionSeries);
     assertTrue(options.equals(that));
   }
 
-
   @Test
   public void testOptionsNotEquals() {
-    options.addOptionGroup(optionGroup);
-    options.addOption(op3);
-    options.addOption(op4);
-
     Options optionsNotEqual = new Options();
-    optionsNotEqual.addOptionGroup(optionGroup);
-    optionsNotEqual.addOption(op3);
+    optionsNotEqual.addOptionGroup(bindingOptionGroup);
+    optionsNotEqual.addOptionGroup(exclusiveOptionGroup);
+    optionsNotEqual.addOptionSeries(optionSeries);
+    optionsNotEqual.addOption(csvFileOption);
 
     assertFalse(options.equals(optionsNotEqual));
   }
 
-
   @Test
   public void testGroupNotEquals() {
-    options.addOptionGroup(optionGroup);
-    options.addOption(op3);
-    options.addOption(op4);
 
     Options groupNotEqual = new Options();
+    groupNotEqual.addOptionSeries(optionSeries);
 
-    groupNotEqual.addOption(op1);
-    groupNotEqual.addOption(op11);
-    groupNotEqual.addOption(op2);
-    groupNotEqual.addOption(op22);
-    groupNotEqual.addOption(op3);
-    groupNotEqual.addOption(op4);
     assertFalse(options.equals(groupNotEqual));
   }
 
+  @Test
+  public void testSeriesNotEquals() {
+
+    Options seriesNotEqual = new Options();
+    OptionSeries diffSeries = new OptionSeries();
+    seriesNotEqual.addOptionGroup(bindingOptionGroup);
+    seriesNotEqual.addOptionGroup(exclusiveOptionGroup);
+
+    diffSeries.addOption(addTodoOption,
+        Arrays.asList(todoTextOption, completedOption, dueOption, priorityOption, categoryOption));
+    diffSeries.addOption(displayOption, Arrays
+        .asList(showIncompleteOption, showCategoryOption, sortByDateOption));
+
+    seriesNotEqual.addOptionSeries(diffSeries);
+
+    assertFalse(options.equals(seriesNotEqual));
+  }
 
   @Test
   public void testHashCode() {
-    options.addOption(op1);
     Options that = new Options();
-    that.addOption(op1);
+    that.addOptionGroup(bindingOptionGroup);
+    that.addOptionGroup(exclusiveOptionGroup);
+    that.addOptionSeries(optionSeries);
     assertTrue(options.hashCode() == that.hashCode());
   }
 
   @Test
   public void testToString() {
-    String expected = "Options{opts=[Option{opt='email', value='null', required=false, "
-        + "description='Generate email messages.', hasArg=false}], requiredOpts=[], optionGroups={}}";
-    options.addOption(op1);
-    assertEquals(expected, options.toString());
+    Options newOptions = new Options();
+    newOptions.addOption(csvFileOption);
+    String expected = "Options{opts=[Option{opt='csv-file', value='null', required=true, description='--csv-file <path/to/folder> The CSV file containing the todos. This option is required.', hasArg=true}], requiredOpts=[csv-file], optionGroups={}, optionSeries={}}";
+    assertEquals(expected, newOptions.toString());
   }
 }

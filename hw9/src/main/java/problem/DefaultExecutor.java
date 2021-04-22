@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -43,13 +44,12 @@ public class DefaultExecutor {
    * Iterates the command line to process every option, especially "add、 complete、 display“,
    * using Factory pattern to create action processor.
    * @throws ParseException parse exception
-   * @throws java.text.ParseException
    */
   public void execute()
       throws ParseException, ExecuteException {
     for (String key : this.commands.keySet()) {
       Executor executor = ExecutorFactory.makeExecutor(key);
-      executor.execute(commands, todos);
+      executor.execute(this.commands, this.todos);
     }
     this.updateCSV();
   }
@@ -123,13 +123,13 @@ public class DefaultExecutor {
     private static Executor makeExecutor(String commandName) {
       switch (commandName) {
         case ADD:
-          return new DefaultExecutor.AddExecutor();
+          return new AddExecutor();
         case COMPLETE:
-          return new DefaultExecutor.CompleteExecutor();
+          return new CompleteExecutor();
         case DISPLAY:
-          return new DefaultExecutor.DisplayExecutor();
+          return new DisplayExecutor();
       }
-      return new DefaultExecutor.SkipExecutor();
+      return new SkipExecutor();
     }
   }
 
@@ -211,7 +211,7 @@ public class DefaultExecutor {
      * @throws java.text.ParseException
      */
     private ToDo buildTodo(Map<String, String> commands, ToDos todos)
-            throws ExecuteException {
+        throws ExecuteException {
       String text = commands.get(TEXT);
       ToDo.Builder builder = new ToDo.Builder(text);
 
@@ -366,6 +366,7 @@ public class DefaultExecutor {
      */
     public void filterByCategory(List<ToDo> toDoList, String category) {
       this.list = toDoList.stream()
+          .filter(todo -> todo.getCategory() != null)
           .filter(todo -> todo.getCategory().equals(category))
           .collect(Collectors.toList());
     }

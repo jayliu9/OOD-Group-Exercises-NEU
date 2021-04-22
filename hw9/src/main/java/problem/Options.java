@@ -16,6 +16,7 @@ public class Options {
   private final List<Option> opts = new ArrayList<>();
   private final List<String> requiredOpts = new ArrayList<>();
   private final Map<String, OptionGroup> optionGroups = new HashMap<>();
+  private final Map<String, OptionSeries> optionSeries = new HashMap<>();
   private static final int SECOND_CHARACTER = 2;
 
   /**
@@ -36,7 +37,20 @@ public class Options {
   public void addOptionGroup(OptionGroup group) {
     for (Option option : group.getAllOptions()) {
       this.addOption(option);
-      optionGroups.put(option.getOpt(), group);
+      this.optionGroups.put(option.getOpt(), group);
+    }
+  }
+
+  /**
+   * Adds the specified option group. When the group is added, its all options including keyOptions
+   * and valueOptions are automatically added to the opts List.
+   *
+   * @param series the OptionSeries that is to be added.
+   */
+  public void addOptionSeries(OptionSeries series) {
+    for (Option option : series.getAllOptions()) {
+      this.addOption(option);
+      this.optionSeries.put(option.getOpt(), series);
     }
   }
 
@@ -108,6 +122,15 @@ public class Options {
     return new HashSet<>(optionGroups.values());
   }
 
+/**
+   * Lists the OptionSeries that are members of this Options instance.
+   *
+   * @return a Collection of OptionSeries instances.
+   */
+  public Set<OptionSeries> getOptionSeries() {
+    return new HashSet<>(optionSeries.values());
+  }
+
   /**
    * Returns the option with the name specified.
    *
@@ -139,7 +162,9 @@ public class Options {
     }
     Options options = (Options) o;
     return Objects.equals(opts, options.opts) && Objects
-        .equals(optionGroups, options.optionGroups);
+        .equals(requiredOpts, options.requiredOpts) && Objects
+        .equals(optionGroups, options.optionGroups) && Objects
+        .equals(optionSeries, options.optionSeries);
   }
 
   /**
@@ -148,7 +173,7 @@ public class Options {
    */
   @Override
   public int hashCode() {
-    return Objects.hash(opts, optionGroups);
+    return Objects.hash(opts, requiredOpts, optionGroups, optionSeries);
   }
 
   /**
@@ -161,6 +186,7 @@ public class Options {
         "opts=" + opts +
         ", requiredOpts=" + requiredOpts +
         ", optionGroups=" + optionGroups +
+        ", optionSeries=" + optionSeries +
         '}';
   }
 }

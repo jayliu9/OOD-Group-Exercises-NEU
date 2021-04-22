@@ -29,20 +29,4 @@ public class MissingOptionException extends ParseException {
 
     return buf.toString();
   }
-
-  private static String createMessage(OptionGroup group) {
-    StringBuilder buf = new StringBuilder("At least has --");
-
-    Iterator<?> it = group.getAllKeyOptionsNames().iterator();
-    while (it.hasNext()) {
-      buf.append(it.next());
-      buf.append(" option");
-      if (it.hasNext()) {
-        buf.append(" or --");
-      } else {
-        buf.append(".");
-      }
-    }
-    return buf.toString();
-  }
 }

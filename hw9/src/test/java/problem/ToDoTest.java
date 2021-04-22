@@ -1,12 +1,13 @@
 package problem;
 
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import static org.junit.Assert.*;
+import org.junit.Before;
+import org.junit.Test;
 
 public class ToDoTest {
 
@@ -69,6 +70,6 @@ public class ToDoTest {
   @Test
   public void testToString() {
     assertEquals("ToDo{ID='2', text='Mail passport', completed=false, " +
-        "due=Fri Feb 28 00:00:00 CST 2020, priority=1, category='null'}", toDo.toString());
+        "due=02/28/2020, priority=1, category='null'}", toDo.toString());
   }
 }
