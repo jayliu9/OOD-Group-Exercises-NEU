@@ -7,11 +7,16 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Objects;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 /**
@@ -20,7 +25,7 @@ import java.util.stream.Collectors;
  */
 public class DefaultExecutor {
   private static final String CSV_FILE = "csv-file";
-  private Map<String, String> commands = new HashMap<>();
+  private Map<String, List<String>> commands = new TreeMap<>();
   private String csvPath;
   private ToDos todos;
 
@@ -36,7 +41,14 @@ public class DefaultExecutor {
    */
   private void convertCommand(CommandLine cmd) {
     for (Option opt : cmd.getOptions()) {
-      this.commands.put(opt.getOpt(), opt.getArgName());
+      if (this.commands.containsKey(opt.getOpt())) {
+        List<String> argList = this.commands.get(opt.getOpt());
+        argList.add(opt.getArgName());
+      } else {
+        List<String> newList = new ArrayList<>();
+        newList.add(opt.getArgName());
+        this.commands.put(opt.getOpt(), newList);
+      }
     }
   }
 
@@ -145,7 +157,7 @@ public class DefaultExecutor {
      * @throws ParseException
      * @throws java.text.ParseException
      */
-    void execute(Map<String, String> commands, ToDos toDos)
+    void execute(Map<String, List<String>> commands, ToDos toDos)
         throws ParseException, ExecuteException;
   }
 
@@ -155,7 +167,7 @@ public class DefaultExecutor {
   private static class SkipExecutor implements Executor {
 
     @Override
-    public void execute(Map<String, String> commands, ToDos toDos) {
+    public void execute(Map<String, List<String>> commands, ToDos toDos) {
       // do nothing
     }
   }
@@ -178,7 +190,7 @@ public class DefaultExecutor {
      * @throws java.text.ParseException
      */
     @Override
-    public void execute(Map<String, String> commands, ToDos todos)
+    public void execute(Map<String, List<String>> commands, ToDos todos)
         throws ExecuteException{
 
       ToDo toDo = this.buildTodo(commands, todos);
@@ -210,21 +222,21 @@ public class DefaultExecutor {
      * @return a new todo
      * @throws java.text.ParseException
      */
-    private ToDo buildTodo(Map<String, String> commands, ToDos todos)
+    private ToDo buildTodo(Map<String, List<String>> commands, ToDos todos)
         throws ExecuteException {
-      String text = commands.get(TEXT);
+      String text = commands.get(TEXT).get(commands.get(TEXT).size() - 1);
       ToDo.Builder builder = new ToDo.Builder(text);
 
-      Iterator<Map.Entry<String, String>> it = commands.entrySet().iterator();
+      Iterator<Entry<String, List<String>>> it = commands.entrySet().iterator();
       while (it.hasNext()){
-        Map.Entry<String, String> entry = it.next();
+        Entry<String, List<String>> entry = it.next();
         switch (entry.getKey()) {
           case COMPLETED:
             builder.setCompleted(true);
             break;
           case DUE:
             try {
-              String dueStr = entry.getValue();
+              String dueStr = entry.getValue().get(entry.getValue().size() - 1);
               SimpleDateFormat sf = new SimpleDateFormat("MM/dd/yyyy");
               builder.addDue(sf.parse(dueStr));
               break;
@@ -232,10 +244,10 @@ public class DefaultExecutor {
               throw new ExecuteException("The beginning of the specified string cannot be parsed.");
             }
           case PRIORITY:
-            builder.addPriority(Integer.parseInt(entry.getValue()));
+            builder.addPriority(Integer.parseInt(entry.getValue().get(entry.getValue().size() - 1)));
             break;
           case CATEGORY:
-            builder.addCategory(entry.getValue());
+            builder.addCategory(entry.getValue().get(entry.getValue().size() - 1));
             break;
         }
       }
@@ -258,17 +270,22 @@ public class DefaultExecutor {
     private static final String COMPLETE = "complete-todo";
 
     @Override
-    public void execute(Map<String, String> commands, ToDos toDos)
+    public void execute(Map<String, List<String>> commands, ToDos toDos)
         throws TodoNotFoundException, ToDoAlreadyCompletedException {
 
-      Iterator<Map.Entry<String, String>> it = commands.entrySet().iterator();
+      System.out.println(commands);
+      Iterator<Map.Entry<String, List<String>>> it = commands.entrySet().iterator();
       while (it.hasNext()) {
-        Map.Entry<String, String> entry = it.next();
+        Map.Entry<String, List<String>> entry = it.next();
         if (entry.getKey().equals(COMPLETE)) {
-          int id = Integer.parseInt(entry.getValue());
-          ToDo todo = toDos.findToDo(id);
-          this.checkCompleted(todo);
-          todo.setCompleted(true);
+          System.out.println(entry);
+          List<Integer> idList = entry.getValue().stream().mapToInt(Integer::parseInt).boxed().collect(
+              Collectors.toList());
+          for (int id : idList) {
+            ToDo todo = toDos.findToDo(id);
+            this.checkCompleted(todo);
+            todo.setCompleted(true);
+          }
         }
       }
     }
@@ -296,7 +313,7 @@ public class DefaultExecutor {
     private List<ToDo> list;
 
     @Override
-    public void execute(Map<String, String> commands, ToDos toDos) {
+    public void execute(Map<String, List<String>> commands, ToDos toDos) {
       list = toDos.getTodoList();
       generateList(commands);
       printList();
@@ -306,17 +323,17 @@ public class DefaultExecutor {
      * generate display todo list according to commandline
      * @param commands user input commandline
      */
-    private void generateList(Map<String, String> commands) {
+    private void generateList(Map<String, List<String>> commands) {
 
-      Iterator<Map.Entry<String, String>> it = commands.entrySet().iterator();
+      Iterator<Map.Entry<String, List<String>>> it = commands.entrySet().iterator();
       while (it.hasNext()) {
-        Map.Entry<String, String> entry = it.next();
+        Map.Entry<String, List<String>> entry = it.next();
         switch (entry.getKey()) {
           case INCOMPLETE:
             filterByIncomplete(list);
             break;
           case CATEGORY:
-            filterByCategory(list, entry.getValue());
+            filterByCategory(list, entry.getValue().toString());
             break;
           case DATE:
             sortByDate(list);

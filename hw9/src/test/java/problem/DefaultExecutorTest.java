@@ -143,6 +143,7 @@ public class DefaultExecutorTest {
     newDueOption.setArgName("Feb/28/2020");
     commandLine.addOption(newDueOption);
     commandLine.addOption(addTodoOption);
+    commandLine.addOption(todoTextOption);
     defaultExecutor = new DefaultExecutor(commandLine);
     defaultExecutor.execute();
   }
@@ -175,9 +176,9 @@ public class DefaultExecutorTest {
         System.lineSeparator() +
         "\"1\",\"Finish HW9\",\"true\",\"03/22/2020\",\"1\",\"school\"", msg);
   }
-/**
+
   @Test (expected = ToDoAlreadyCompletedException.class)
-  public void toDoExist() throws ParseException, ExecuteException {
+  public void alreadyComplete() throws ParseException, ExecuteException {
     completeTodoOption.setArgName("1");
     commandLine.addOption(completeTodoOption);
     Option again = new Option("complete-todo", true, false,
@@ -188,7 +189,6 @@ public class DefaultExecutorTest {
     defaultExecutor = new DefaultExecutor(commandLine);
     defaultExecutor.execute();
   }
-  */
 
   @Test
   public void displayAll() throws ParseException, ExecuteException {
