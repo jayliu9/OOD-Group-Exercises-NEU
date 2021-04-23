@@ -6,6 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
+/**
+ * An OptionSeries class, representing a map that contains a option and its corresponding optional options.
+ */
 public class OptionSeries {
 
   private Map<Option, List<Option>> optionSeries = new HashMap<>();

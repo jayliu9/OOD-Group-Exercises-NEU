@@ -35,6 +35,7 @@ public class DefaultParserTest {
 
     csvFileOption = new Option("csv-file", true, true, "--csv-file <path/to/folder> "
         + "The CSV file containing the todos. This option is required.");
+    csvFileOption.setArgName("todos.csv");
 
     addTodoOption = new Option("add-todo", false, false, "--add-todo Add a new todo. "
         + "If this option is provided, then --todo-text must also be provided.");
@@ -42,6 +43,7 @@ public class DefaultParserTest {
     todoTextOption = new Option("todo-text", true, false,
         "--todo-text <description of todo> "
             + "A description of the todo.");
+    todoTextOption.setArgName("A description of todo");
 
     completedOption = new Option("completed", false, false,
         "--completed (Optional) Sets the completed status of a new todo to true.");
@@ -57,6 +59,7 @@ public class DefaultParserTest {
 
     completeTodoOption = new Option("complete-todo", true, false,
         "--complete-todo <id> Mark the Todo with the provided ID as complete.");
+    completeTodoOption.setArgName("1");
 
     displayOption = new Option("display", false, false,
         "--display Display todos. If none of the following optional arguments are provided, displays all todos.");

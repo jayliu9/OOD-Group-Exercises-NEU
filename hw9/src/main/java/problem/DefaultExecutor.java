@@ -29,6 +29,10 @@ public class DefaultExecutor {
   private String csvPath;
   private ToDos todos;
 
+  /**
+   * Constructor for an DefaultExecutor class.
+   * @param cmd The user input command.
+   */
   public DefaultExecutor(CommandLine cmd) {
     this.convertCommand(cmd);
     this.csvPath = cmd.getOptionValue(CSV_FILE);
@@ -58,6 +62,7 @@ public class DefaultExecutor {
    * Iterates the command line to process every option, especially "add、 complete、 display“,
    * using Factory pattern to create action processor.
    * @throws ParseException parse exception
+   * @throws ExecuteException if there are any problems encountered while executing the command line.
    */
   public void execute()
       throws ParseException, ExecuteException {
@@ -109,7 +114,7 @@ public class DefaultExecutor {
   }
 
   /**
-   * Write the information to .csv file in the given path.
+   * Writes the information to .csv file in the given path.
    * @param msg the generated information
    * @param filepath The .csv file path
    */
@@ -127,13 +132,18 @@ public class DefaultExecutor {
   }
 
   /**
-   * ExecutorFactory generate different Executor according to the commands
+   * Using factory pattern generate different Executor according to the commands.
    */
   private static class ExecutorFactory {
     private static final String ADD = "add-todo";
     private static final String COMPLETE = "complete-todo";
     private static final String DISPLAY = "display";
 
+    /**
+     * Constructs ExecutorFactory.
+     * @param commandName The command line token to handle.
+     * @return different executors according to the commandName.
+     */
     private static Executor makeExecutor(String commandName) {
       switch (commandName) {
         case ADD:
@@ -153,18 +163,18 @@ public class DefaultExecutor {
   private interface Executor {
 
     /**
-     * Processes the todo list and the csv file based on the command line arguments
-     * @param commands
-     * @param toDos
-     * @throws ParseException
-     * @throws java.text.ParseException
+     * Executes the toDos according to the specified commands.
+     * @param commands The specified commands.
+     * @param toDos The ToDos object.
+     * @throws ParseException if there are any problems encountered while parsing the command line tokens.
+     * @throws ExecuteException if there are any problems encountered while executing the commandline.
      */
     void execute(Map<String, List<String>> commands, ToDos toDos)
         throws ParseException, ExecuteException;
   }
 
   /**
-   * if command is not execute command, just skip it
+   * If command is not execute command, just skip it
    */
   private static class SkipExecutor implements Executor {
 
@@ -185,11 +195,10 @@ public class DefaultExecutor {
     private static final String CATEGORY = "category";
 
     /**
-     * Using Builder Pattern to create a new ToDo object to add
-     * @param commands
-     * @param todos
-     * @throws ParseException
-     * @throws java.text.ParseException
+     * Executes the toDos according to the specified commands. Using Builder Pattern to create a new ToDo object to add
+     * @param commands The specified commands.
+     * @param todos The ToDos object.
+     * @throws ExecuteException if there are any problems encountered while executing the commandline.
      */
     @Override
     public void execute(Map<String, List<String>> commands, ToDos todos)
@@ -201,10 +210,10 @@ public class DefaultExecutor {
     }
 
     /**
-     * check if new todo exists in current todos, if exist throw exception
-     * @param toDo new todo
-     * @param todos current todo list
-     * @throws TodoExistException
+     * Checks if new to\do exists in current todos.
+     * @param toDo A new todo to be checked.
+     * @param todos The current to\do list.
+     * @throws TodoExistException if the new to\do already exits in the current to\do list.
      */
     private void checkDuplicate(ToDo toDo, ToDos todos) throws TodoExistException {
       ToDo findTodo = todos.getTodoList().stream()
@@ -218,11 +227,11 @@ public class DefaultExecutor {
     }
 
     /**
-     * build a new todo
-     * @param commands user input commands
-     * @param todos current todo list
-     * @return a new todo
-     * @throws java.text.ParseException
+     * Builds a new To\Do.
+     * @param commands The user input commands.
+     * @param todos The current to\do list.
+     * @return A new to\do to be added.
+     * @throws ExecuteException if there are any problems encountered while executing the commandline.
      */
     private ToDo buildTodo(Map<String, List<String>> commands, ToDos todos)
         throws ExecuteException {
@@ -266,11 +275,17 @@ public class DefaultExecutor {
   }
 
   /**
-   * complete todo, if todo has been completed, throw exception
+   * A CompleteExecutor class, completing a To\Do.
    */
   private static class CompleteExecutor implements Executor {
     private static final String COMPLETE = "complete-todo";
 
+    /**
+     * Executes the toDos according to the specified commands.
+     * @param commands The specified commands.
+     * @param toDos The ToDos object.
+     * @throws ExecuteException if there are any problems encountered while executing the commandline.
+     */
     @Override
     public void execute(Map<String, List<String>> commands, ToDos toDos)
             throws TodoNotFoundException, ToDoAlreadyCompletedException {
@@ -303,7 +318,7 @@ public class DefaultExecutor {
   }
 
   /**
-   * Print todo list under specific conditions
+   * Prints to\do list under specific conditions
    */
   private static class DisplayExecutor implements Executor {
     private static final String INCOMPLETE = "show-incomplete";
@@ -320,7 +335,7 @@ public class DefaultExecutor {
     }
 
     /**
-     * generate display todo list according to commandline
+     * Generates display to\do list according to commandline.
      * @param commands user input commandline
      */
     private void generateList(Map<String, List<String>> commands) {
@@ -346,7 +361,7 @@ public class DefaultExecutor {
     }
 
     /**
-     * print todo list, if no todo in list, return a message
+     * Prints to\do list, if no to\do in list, return a message.
      */
     private void printList() {
       if (list.size() == 0) {
@@ -357,8 +372,8 @@ public class DefaultExecutor {
     }
 
     /**
-     * Sort the Todos by date (ascending);
-     * @param toDoList todo list
+     * Sorts the Todos by date (ascending);
+     * @param toDoList to\do list
      */
     private void sortByDate(List<ToDo> toDoList) {
       this.list = toDoList.stream()
@@ -367,7 +382,7 @@ public class DefaultExecutor {
     }
 
     /**
-     * Sort the Todos by priority (ascending);
+     * Sorts the Todos by priority (ascending);
      * @param toDoList todo list
      */
     private void sortByPriority(List<ToDo> toDoList) {
@@ -377,8 +392,8 @@ public class DefaultExecutor {
     }
 
     /**
-     * Filter Todos with specific category
-     * @param toDoList todo list
+     * Filters Todos with specific category
+     * @param toDoList to\do list
      * @param category a category
      */
     public void filterByCategory(List<ToDo> toDoList, String category) {
@@ -389,8 +404,8 @@ public class DefaultExecutor {
     }
 
     /**
-     * get incomplete Todos
-     * @param toDoList todo list
+     * Gets incomplete Todos.
+     * @param toDoList to\do list
      */
     public void filterByIncomplete(List<ToDo> toDoList) {
       this.list = toDoList.stream()

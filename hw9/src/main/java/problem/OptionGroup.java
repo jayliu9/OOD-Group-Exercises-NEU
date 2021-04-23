@@ -7,16 +7,30 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+/**
+ * An OptionGroup class, describing a relationship(binding or not) between two options.
+ */
 public class OptionGroup {
 
   private boolean binding;
   private Map<Option, Option> optionGroup;
 
+  /**
+   * Constructor for an OptionGroup class.
+   *
+   * @param binding A boolean representing the relationship between two options(binding or not).
+   */
   public OptionGroup(boolean binding) {
     this.binding = binding;
     this.optionGroup = new HashMap<>();
   }
 
+  /**
+   * Checks whether the OptionGroup has a binding relationship or not.
+   *
+   * @return true if the options in the OptionGroup have a binding relationship; false if the
+   * options in the OptionGroup are mutually exclusive.
+   */
   public boolean isBinding() {
     return this.binding;
   }
