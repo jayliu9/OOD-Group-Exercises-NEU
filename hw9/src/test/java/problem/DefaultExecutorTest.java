@@ -136,7 +136,7 @@ public class DefaultExecutorTest {
         "\"2\",\"Clean the classroom\",\"true\",\"02/28/2020\",\"1\",\"school\"", msg);
   }
 
-  @Test (expected = ExecuteException.class)
+  @Test(expected = ExecuteException.class)
   public void dateFormatError() throws ParseException, ExecuteException {
     Option newDueOption = new Option("due", true, false,
         "--due <due date> (Optional) Sets the due date of a new todo. You may choose how the date should be formatted.");
@@ -149,11 +149,46 @@ public class DefaultExecutorTest {
 
   @Test
   public void completeExecutor() throws ParseException, ExecuteException {
-//    commandLine.addOption(completeTodoOption);
-//    defaultExecutor = new DefaultExecutor(commandLine);
-//    defaultExecutor.execute();
+    completeTodoOption.setArgName("1");
+    commandLine.addOption(completeTodoOption);
+    defaultExecutor = new DefaultExecutor(commandLine);
+    defaultExecutor.execute();
 
+    String msg = "";
+    String fileName = "testInfo.csv";
+    File read = new File(tempFolder.getRoot().getPath(), fileName);
+    try (BufferedReader inputFile = new BufferedReader(new FileReader(read))) {
+      String line;
+      while ((line = inputFile.readLine()) != null) {
+        msg += line + System.lineSeparator();
+      }
+    } catch (FileNotFoundException fnfe) {
+      System.out.println("*** OOPS! A file was not found : " + fnfe.getMessage());
+      fnfe.printStackTrace();
+    } catch (IOException ioe) {
+      System.out.println("Something went wrong! : " + ioe.getMessage());
+      ioe.printStackTrace();
+    }
+
+    msg = msg.trim();
+    assertEquals("\"id\", \"text\", \"completed\", \"due\", \"priority\", \"category\"" +
+        System.lineSeparator() +
+        "\"1\",\"Finish HW9\",\"true\",\"03/22/2020\",\"1\",\"school\"", msg);
   }
+/**
+  @Test (expected = ToDoAlreadyCompletedException.class)
+  public void toDoExist() throws ParseException, ExecuteException {
+    completeTodoOption.setArgName("1");
+    commandLine.addOption(completeTodoOption);
+    Option again = new Option("complete-todo", true, false,
+        "--complete-todo <id> Mark the Todo with the provided ID as complete.");
+    again.setArgName("1");
+    commandLine.addOption(again);
+    System.out.println(commandLine);
+    defaultExecutor = new DefaultExecutor(commandLine);
+    defaultExecutor.execute();
+  }
+  */
 
   @Test
   public void displayAll() throws ParseException, ExecuteException {

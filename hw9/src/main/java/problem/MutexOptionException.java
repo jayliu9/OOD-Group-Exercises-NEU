@@ -1,13 +1,9 @@
 package problem;
 
 public class MutexOptionException extends ParseException{
-  public MutexOptionException(String message)
-  {
-    super(message);
-  }
 
   public MutexOptionException(Option givenOption, Option missingOption) {
-    this(createMessage(givenOption, missingOption));
+    super(createMessage(givenOption, missingOption));
   }
 
   private static String createMessage(Option givenOption, Option mutexOption) {
