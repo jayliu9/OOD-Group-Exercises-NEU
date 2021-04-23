@@ -44,6 +44,8 @@ public class DefaultExecutor {
       if (this.commands.containsKey(opt.getOpt())) {
         List<String> argList = this.commands.get(opt.getOpt());
         argList.add(opt.getArgName());
+        this.commands.put(opt.getOpt(), argList);
+
       } else {
         List<String> newList = new ArrayList<>();
         newList.add(opt.getArgName());
@@ -271,16 +273,14 @@ public class DefaultExecutor {
 
     @Override
     public void execute(Map<String, List<String>> commands, ToDos toDos)
-        throws TodoNotFoundException, ToDoAlreadyCompletedException {
+            throws TodoNotFoundException, ToDoAlreadyCompletedException {
 
-      System.out.println(commands);
       Iterator<Map.Entry<String, List<String>>> it = commands.entrySet().iterator();
       while (it.hasNext()) {
         Map.Entry<String, List<String>> entry = it.next();
         if (entry.getKey().equals(COMPLETE)) {
-          System.out.println(entry);
           List<Integer> idList = entry.getValue().stream().mapToInt(Integer::parseInt).boxed().collect(
-              Collectors.toList());
+                  Collectors.toList());
           for (int id : idList) {
             ToDo todo = toDos.findToDo(id);
             this.checkCompleted(todo);

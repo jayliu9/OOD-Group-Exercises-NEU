@@ -174,9 +174,10 @@ public class DefaultParser implements CommandLineParser {
   private void handleOption(Option option) {
     // check the previous option before handling the next one
     this.updateRequiredOptions(option);
-    this.cmd.addOption(option);
+    Option newOption = new Option(option.getOpt(), option.acceptsArg(), option.isRequired(), option.getDescription());
+    this.cmd.addOption(newOption);
     if (option.acceptsArg()) {
-      this.currentOption = option;
+      this.currentOption = newOption;
     } else {
       this.currentOption = null;
     }
