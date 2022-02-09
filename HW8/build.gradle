@@ -1,0 +1,127 @@
+plugins {
+    id 'java'
+    id 'pmd' // PMD: source code analyzer to find common programming flaws
+    id 'jacoco' // Code coverage
+}
+
+defaultTasks 'clean', 'build', 'javadoc', 'check', 'test'
+
+apply plugin: 'java'
+
+group 'edu.neu.khoury.ood'
+version '1.0-SNAPSHOT'
+description 'OOD Spring 2021 Seattle'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+    mavenLocal()
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testImplementation 'junit:junit:4.12'
+}
+
+jacoco {
+    toolVersion = "0.8.4"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            limit {
+                minimum = 0.3
+            }
+        }
+
+        rule {
+            enabled = false
+            element = 'CLASS'
+            includes = ['org.gradle.*']
+
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 0.3
+            }
+        }
+    }
+}
+
+
+
+test {
+    useJUnit()
+
+    maxHeapSize = '1G'
+}
+
+tasks.withType(Pmd){
+    reports{
+        xml.enabled=true
+        html.enabled=true
+    }
+}
+pmd {
+    ignoreFailures = true
+    pmdTest.enabled=true
+    ruleSets = [
+            "category/java/bestpractices.xml",
+            "category/java/errorprone.xml",
+            "category/java/codestyle.xml",
+            "java-basic",
+            "java-braces",
+            "java-strings",
+    ]
+    rulePriority = 2
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
+task docs(type: Javadoc) {
+    source = sourceSets.main.allJava
+
+}
+
+check.dependsOn jacocoTestCoverageVerification
+jacocoTestReport.mustRunAfter test
+
+task doAll{
+    dependsOn test
+    dependsOn check
+    dependsOn javadoc
+    dependsOn build
+
+    doLast {
+        println 'all done!'
+    }
+}
+
+jacocoTestReport {
+    doLast {
+        println "file://$buildDir/jacocoHtml/index.html"
+    }
+}
+
+javadoc {
+    doLast {
+        println "file://$buildDir/docs/javadoc/index.html"
+    }
+}
+
+test {
+    finalizedBy jacocoTestReport
+}
